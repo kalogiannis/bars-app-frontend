@@ -7,9 +7,9 @@ const HomePage = () => {
     <div className="flex flex-col gap-12">
       <div className="md:px-32 bg-white rounded-lg shadow-md py-8 flex flex-col gap-5 text-center -mt-16">
         <h1 className="text-5xl font-bold tracking-tight text-orange-600">
-          Tuck into a takeway today
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, sequi?
         </h1>
-        <span className="text-xl">Food is just a click away!</span>
+        <span className="text-xl">Lorem ipsum dolor sit amet consectetur.</span>
       </div>
 
       <div className="grid md:grid-cols-2 gap-5">
@@ -19,8 +19,7 @@ const HomePage = () => {
             Order takeaway even faster!
           </span>
           <span>
-            Download the MernEats App for faster ordering and personalised
-            recommendations
+            Download the  App 
           </span>
           <img src={appDownloadImage} />
         </div>
