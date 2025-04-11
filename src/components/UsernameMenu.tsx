@@ -12,7 +12,11 @@ import { Button } from "./ui/button";
 
 const UsernameMenu = () => {
   const { user, logout } = useAuth0();
-
+ const logoutOptions: LogoutOptions = {
+    logoutParams: {
+      returnTo: window.location.origin,
+    },
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center px-3 font-bold hover:text-orange-500 gap-2">
@@ -36,7 +40,7 @@ const UsernameMenu = () => {
         <Separator />
         <DropdownMenuItem>
           <Button
-            onClick={() => logout()}
+            onClick={() => logout(logoutOptions)}
             className="flex flex-1 font-bold bg-orange-500"
           >
             Log Out

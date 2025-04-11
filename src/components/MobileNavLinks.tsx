@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0, LogoutOptions } from "@auth0/auth0-react";
 
 const MobileNavLinks = () => {
   const { logout } = useAuth0();
+
+  const logoutOptions: LogoutOptions = {
+    logoutParams: {
+      returnTo: window.location.origin,
+    },
+  };
+
   return (
     <>
       <Link
@@ -25,7 +32,7 @@ const MobileNavLinks = () => {
         User Profile
       </Link>
       <Button
-        onClick={() => logout()}
+        onClick={() => logout(logoutOptions)}
         className="flex items-center px-3 font-bold hover:bg-gray-500"
       >
         Log Out
