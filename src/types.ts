@@ -22,9 +22,7 @@ export type Bar = {
   barName: string;
   city: string;
   country: string;
-  deliveryPrice: number;
-  estimatedDeliveryTime: number;
-  cuisines: string[];
+  drinks: string[];
   menuItems: MenuItem[];
   imageUrl: string;
   lastUpdated: string;
