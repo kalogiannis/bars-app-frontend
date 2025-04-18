@@ -4,7 +4,8 @@ import HomePage from "./pages/HomePages";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import ManageBarPage from "./pages/ManageBarPage";
+import ManageRestaurantPage from "./pages/ManageRestaurantPage";
+import ManageBarPage from "./pages/ManageBar";
 
 const AppRoutes = () => {
   return (
@@ -31,10 +32,19 @@ const AppRoutes = () => {
           path="/manage-restaurant"
           element={
             <Layout>
+              <ManageRestaurantPage />
+            </Layout>
+          }
+        />
+          <Route
+          path="/manage-bar"
+          element={
+            <Layout>
               <ManageBarPage />
             </Layout>
           }
         />
+       
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

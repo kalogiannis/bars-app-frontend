@@ -16,13 +16,36 @@ export type MenuItem = {
 };
 
 
+// export type Bar = {
+//   _id: string;
+//   user: string;
+//   barName: string;
+//   city: string;
+//   country: string;
+//   drinks: string[];
+//   menuItems: MenuItem[];
+//   imageUrl: string;
+//   lastUpdated: string;
+// };
+
 export type Bar = {
-  _id: string;
-  user: string;
   barName: string;
   city: string;
   country: string;
-  drinks: string[];
+  drinks: string;
+  lastUpdated: string;
+};
+
+
+export type Restaurant = {
+  _id: string;
+  user: string;
+  restaurantName: string;
+  city: string;
+  country: string;
+  deliveryPrice: number;
+  estimatedDeliveryTime: number;
+  cuisines: string[];
   menuItems: MenuItem[];
   imageUrl: string;
   lastUpdated: string;

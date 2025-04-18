@@ -1,4 +1,4 @@
-import {  Bar } from "@/types";
+import { Bar } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
@@ -31,8 +31,6 @@ export const useGetMyBar = () => {
 
   return { bar, isLoading };
 };
-
-
 
 export const useCreateMyBar = () => {
   const { getAccessTokenSilently } = useAuth0();
@@ -69,19 +67,16 @@ export const useCreateMyBar = () => {
   }
 
   if (error) {
-    toast.error("Unable to update bar");
+    toast.error("Unable to create bar");
   }
 
   return { createBar, isLoading };
 };
 
-
-
-
 export const useUpdateMyBar = () => {
   const { getAccessTokenSilently } = useAuth0();
 
-  const updateBarRequest = async (
+  const updateMyBarRequest = async (
     barFormData: FormData
   ): Promise<Bar> => {
     const accessToken = await getAccessTokenSilently();
@@ -94,7 +89,7 @@ export const useUpdateMyBar = () => {
       body: barFormData,
     });
 
-    if (!response) {
+    if (!response.ok) {
       throw new Error("Failed to update bar");
     }
 
@@ -104,12 +99,12 @@ export const useUpdateMyBar = () => {
   const {
     mutate: updateBar,
     isLoading,
-    error,
     isSuccess,
-  } = useMutation(updateBarRequest);
+    error,
+  } = useMutation(updateMyBarRequest);
 
   if (isSuccess) {
-    toast.success("Bar Updated");
+    toast.success("Bar updated");
   }
 
   if (error) {
@@ -118,7 +113,3 @@ export const useUpdateMyBar = () => {
 
   return { updateBar, isLoading };
 };
-
-
-
-
