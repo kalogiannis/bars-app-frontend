@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 
 const UsernameMenu = () => {
   const { user, logout } = useAuth0();
- const logoutOptions: LogoutOptions = {
+  const logoutOptions: LogoutOptions = {
     logoutParams: {
       returnTo: window.location.origin,
     },
@@ -25,24 +25,13 @@ const UsernameMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <Link
-            to="/manage-bar"
-            className="font-bold hover:text-orange-500"
-          >
-            Manage Bar
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link
-            to="/manage-restaurant"
-            className="font-bold hover:text-orange-500"
-          >
-            Manage restaurant
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
           <Link to="/user-profile" className="font-bold hover:text-orange-500">
             User Profile
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link to="/manage-bar" className="font-bold hover:text-orange-500">
+            Manage bar
           </Link>
         </DropdownMenuItem>
         <Separator />

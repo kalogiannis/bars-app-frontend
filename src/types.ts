@@ -8,45 +8,13 @@ export type User = {
 };
 
 
-//30
-export type MenuItem = {
-  _id: string;
-  name: string;
-  price: number;
-};
-
-
-// export type Bar = {
-//   _id: string;
-//   user: string;
-//   barName: string;
-//   city: string;
-//   country: string;
-//   drinks: string[];
-//   menuItems: MenuItem[];
-//   imageUrl: string;
-//   lastUpdated: string;
-// };
-
-export type Bar = {
-  barName: string;
-  city: string;
-  country: string;
-  drinks: string;
-  lastUpdated: string;
-};
-
-
-export type Restaurant = {
-  _id: string;
-  user: string;
-  restaurantName: string;
-  city: string;
-  country: string;
-  deliveryPrice: number;
-  estimatedDeliveryTime: number;
-  cuisines: string[];
-  menuItems: MenuItem[];
+export type Bar={
+  _id:string;
+  name:string;
+  city:string;
+  country:string;
+  openingHours:string;
   imageUrl: string;
-  lastUpdated: string;
-};
+  lastUpdated:string;
+}
+
