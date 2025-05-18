@@ -54,7 +54,7 @@ type Props = {
     <Form {...form}>
         <form
             onSubmit={form.handleSubmit(onSave)}
-            className="space-y-4 bg-gray-50 rounded-lg md:p-10"
+            className="space-y-4 bg-gray-900 rounded-lg md:p-10"
         >
         <div>
           <h2 className="text-2xl font-bold">{title}</h2>
@@ -69,7 +69,7 @@ type Props = {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} disabled className="bg-white" />
+                <Input {...field} disabled className="bg-white text-black" />
               </FormControl>
             </FormItem>
           )}
@@ -133,7 +133,7 @@ type Props = {
         {isLoading ? (
           <LoadingButton />
         ) : (
-          <Button type="submit" className="bg-orange-500">
+          <Button type="submit" className="bg-green-700">
             {buttonText}
           </Button>
         )}

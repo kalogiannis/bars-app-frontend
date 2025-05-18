@@ -17,28 +17,34 @@ const UsernameMenu = () => {
       returnTo: window.location.origin,
     },
   };
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center px-3 font-bold hover:text-orange-500 gap-2">
-        <CircleUserRound className="text-orange-500" />
+      <DropdownMenuTrigger className="flex items-center px-3 font-bold hover:text-white gap-2">
+        <CircleUserRound className="text-white" />
         {user?.email}
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>
-          <Link to="/user-profile" className="font-bold hover:text-orange-500">
+
+      <DropdownMenuContent className="bg-gray-900 text-white">
+        {/* override Radix’s data-highlighted background */}
+        <DropdownMenuItem className="data-[highlighted]:bg-gray-900">
+          <Link to="/user-profile" className="font-bold hover:text-gray-500">
             User Profile
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link to="/manage-bar" className="font-bold hover:text-orange-500">
+
+        <DropdownMenuItem className="data-[highlighted]:bg-gray-900">
+          <Link to="/manage-bar" className="font-bold hover:text-gray-500">
             Manage bar
           </Link>
         </DropdownMenuItem>
+
         <Separator />
-        <DropdownMenuItem>
+
+        <DropdownMenuItem className="data-[highlighted]:bg-gray-900">
           <Button
             onClick={() => logout(logoutOptions)}
-            className="flex flex-1 font-bold bg-orange-500"
+            className="flex w-full justify-center font-bold bg-blue-500 hover:bg-blue-400 text-white rounded-md px-4 py-2"
           >
             Log Out
           </Button>
@@ -49,3 +55,6 @@ const UsernameMenu = () => {
 };
 
 export default UsernameMenu;
+
+
+

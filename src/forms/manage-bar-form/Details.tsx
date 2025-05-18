@@ -1,4 +1,3 @@
-// forms/gamma/Details.tsx
 import {
   FormField,
   FormItem,
@@ -20,7 +19,7 @@ const Details = () => {
           <FormItem>
             <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Write the name of the bar..." className="bg-white"/>
+              <Input {...field} placeholder="Write the name of the bar..." className="bg-white text-black"/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -34,7 +33,7 @@ const Details = () => {
           <FormItem>
             <FormLabel>City</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="City.." className="bg-white"/>
+              <Input {...field} placeholder="City.." className="bg-white text-black"/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -48,7 +47,7 @@ const Details = () => {
           <FormItem>
             <FormLabel>Country</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Country.." className="bg-white"/>
+              <Input {...field} placeholder="Country.." className="bg-white text-black"/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -62,7 +61,36 @@ const Details = () => {
           <FormItem>
             <FormLabel>Opening hours</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Opening hours.." className="bg-white"/>
+              <Input {...field} placeholder="Opening hours.." className="bg-white text-black"/>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+       <FormField
+        control={control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder="Describe your bar…" className="bg-white text-black " />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+  
+      <FormField
+        control={control}
+        name="location"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Location</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder="Physical address or neighborhood…" className="bg-white text-black" />
             </FormControl>
             <FormMessage />
           </FormItem>

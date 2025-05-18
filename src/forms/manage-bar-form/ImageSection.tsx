@@ -11,7 +11,7 @@ const ImageSection = () => {
         <div>
             <h2>image</h2>
             <FormDescription>
-                Informatio about image section
+                Information about image section
             </FormDescription>
         </div>
         <div className="flex flex-col gap-8 md:w-[50%]">

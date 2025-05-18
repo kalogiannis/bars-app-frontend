@@ -15,7 +15,9 @@ const formschema = z
     name: z.string().nonempty("name is required "),
     city: z.string().nonempty('city is required'),
     country: z.string().nonempty('country is required'),
-    openingHours: z.string().nonempty('opening hours is required'), 
+    openingHours: z.string().nonempty('opening hours is required'),
+    description: z.string().nonempty('description is required'),
+    location: z.string().nonempty('location is required'), 
     imageUrl: z.string().optional(),
     imageFile: z.instanceof(File, { message: "Image is required" }).optional(),
   })
@@ -40,6 +42,8 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
           city: bar.city,
           country: bar.country,
           openingHours: bar.openingHours,
+          description: bar.description,
+          location: bar.location,
           imageUrl: bar.imageUrl, 
           imageFile: undefined, 
         }
@@ -48,6 +52,8 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
           city: '',
           country:'',
           openingHours:'',
+          description: '',
+          location: '',
           imageUrl: undefined, 
           imageFile: undefined, 
         },
@@ -60,6 +66,8 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
         city: bar.city,
         country:bar.country,
         openingHours:bar.openingHours,
+        description:bar.description,
+        location:bar.location,
         imageUrl: bar.imageUrl,
         imageFile: undefined,
       });
@@ -73,7 +81,9 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
     formData.append("city",values.city);
     formData.append("country",values.country);
     formData.append("openingHours",values.openingHours);
-    
+    formData.append("description",values.description);
+    formData.append("location",values.location);
+
     if (values.imageFile) {
       formData.append("imageFile", values.imageFile);
     }
@@ -82,7 +92,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
   return (
     <Form {...form}>
       <form  
-        className="space-y-4 bg-gray-50 rounded-lg md:p-10"
+        className="space-y-4  rounded-lg md:p-10"
         onSubmit={handleSubmit(onSubmit)}
        >
         <Details />
@@ -92,7 +102,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
           {isLoading ? (
             <LoadingButton />
           ) : (
-            <Button type="submit">Submit</Button>
+            <Button type="submit" className="bg-green-500">Submit</Button>
           )}
         </div>
       </form>

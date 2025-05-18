@@ -15,19 +15,19 @@ const MobileNavLinks = () => {
     <>
       <Link
         to="/user-profile"
-        className="flex bg-white items-center font-bold hover:text-orange-500"
+        className="flex  items-center font-bold text-white hover:text-gray-500"
       >
         User Profile
       </Link>
       <Link
         to="/manage-bar"
-        className="flex bg-white items-center font-bold hover:text-orange-500"
+        className="flex  items-center font-bold text-white hover:text-gray-500"
       >
         My Bar
       </Link>
       <Button
         onClick={() => logout(logoutOptions)}
-        className="flex items-center px-3 font-bold hover:bg-gray-500"
+        className="flex items-center px-3 font-bold bg-blue-500 hover:bg-blue-400"
       >
         Log Out
       </Button>
