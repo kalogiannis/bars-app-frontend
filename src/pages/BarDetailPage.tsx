@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HeroSection from '../components/barDetails/HeroSection';
 import ReservationDialog from '../components/barDetails/ReservationDialog';

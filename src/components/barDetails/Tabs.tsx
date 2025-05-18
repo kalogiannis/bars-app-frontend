@@ -1,4 +1,3 @@
-import React from 'react';
 
 const TABS = ['description', 'hours', 'photos', 'location', 'reviews'] as const;
 type Tab = typeof TABS[number];
