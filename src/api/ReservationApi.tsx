@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 const BASE = import.meta.env.VITE_API_BASE_URL;
@@ -51,6 +52,7 @@ export function useCheckAvailability(
  * → POST /api/bar/:barId/reservations
  */
 export function useCreateReservation(barId: string) {
+   const { getAccessTokenSilently } = useAuth0();
   const qc = useQueryClient();
   return useMutation<
     Reservation,                              // server returns the created reservation object
@@ -58,6 +60,7 @@ export function useCreateReservation(barId: string) {
     { date: string; time: string; partySize: string; refid: string }
   >(
     async ({ date, time, partySize, refid }) => {
+      const token = await getAccessTokenSilently();
       const payload = {
         date,
         time,
@@ -68,7 +71,10 @@ export function useCreateReservation(barId: string) {
         `${BASE}/api/bar/${barId}/reservations`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json' ,
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(payload),
         }
       );
