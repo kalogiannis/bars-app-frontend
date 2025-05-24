@@ -44,7 +44,7 @@ export type Review = {
   _id: string;
   reviewer: string;
   comment: string;
-  rating: number;        // ← new
+  rating: number;        
   createdAt: string;
 };
 export type ReviewSummary = {
@@ -57,3 +57,20 @@ export type ReviewsResponse = {
   reviews: Review[];
 };
 
+
+
+export type Reservation = {
+  _id: string;
+  bar: Bar; 
+  user: string;
+  date: string;
+  time: string;
+  partySize: number;
+  refid: string;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  createdAt: string;
+  updatedAt: string;
+
+  cancelReason?: string;
+  cancelledAt?: string;
+};

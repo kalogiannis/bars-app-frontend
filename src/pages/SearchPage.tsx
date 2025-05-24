@@ -5,7 +5,7 @@ import SearchResultCard from "@/components/SearchResultCard";
 import SearchResultInfo from "@/components/SearchResultInfo";
 import SortOptionDropdown from "@/components/SortOptionDropdown";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export type SearchState = {
   searchQuery: string;
@@ -18,7 +18,7 @@ const SearchPage = () => {
   const [searchState, setSearchState] = useState<SearchState>({
     searchQuery: "",
     page: 1,
-    sortOption: "bestMatch"
+    sortOption: "Rating"
   });
   const { results, isLoading } = useSearchBars(searchState, city);
 
@@ -26,6 +26,7 @@ const SearchPage = () => {
     setSearchState((prevState) => ({
       ...prevState,
       searchQuery: searchFormData.searchQuery,
+      page:1
     }));
   };
 
@@ -54,11 +55,23 @@ const SearchPage = () => {
     return <span>loading...</span>;
   }
 
-  if (!results?.data || !city) {
-    return <span>No results found</span>;
-  }
+  
 
-
+if (!results?.data || !city) {
+  return (
+    <div className="p-8 text-center space-y-4">
+      <p className="text-lg text-red-600">
+        No bars found for “{city}”
+      </p>
+      <Link
+        to="/"
+        className="text-blue-500 underline hover:text-blue-700"
+      >
+        ← Back to Home
+      </Link>
+    </div>
+  );
+}
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
       User searched for::: {city}

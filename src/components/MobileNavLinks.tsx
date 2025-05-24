@@ -15,13 +15,13 @@ const MobileNavLinks = () => {
     <>
       <Link
         to="/user-profile"
-        className="flex  items-center font-bold text-white hover:text-gray-500"
+        className="flex  items-center font-bold text-gray-500 hover:text-white"
       >
         User Profile
       </Link>
       <Link
         to="/manage-bar"
-        className="flex  items-center font-bold text-white hover:text-gray-500"
+        className="flex  items-center font-bold text-gray-500 hover:text-white"
       >
         My Bar
       </Link>

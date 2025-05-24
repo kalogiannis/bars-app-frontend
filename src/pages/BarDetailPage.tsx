@@ -34,7 +34,6 @@ const BarDetailPage = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col overflow-x-hidden">
-         {/* Hero + Reservation */}
       <div className="relative">
         <HeroSection imageUrl={bar.imageUrl} name={bar.name} location={bar.location} />
         <ReservationDialog barId={bar._id} barName={bar.name} openingHours={bar.openingHours} />

@@ -8,6 +8,7 @@ import ManageBarPage from "./pages/ManageBarPage";
 import SearchPage from "./pages/SearchPage";
 import BarDetailPage from "./pages/BarDetailPage";
 import ReservationConfirmationPage from "./pages/ReservationConfirmationPage";
+import MyReservationsPage from "./pages/MyReservationsPage";
 
 const AppRoutes = () => {
   return (
@@ -64,14 +65,22 @@ const AppRoutes = () => {
             </Layout>
           }
         />
-            <Route
-        path="/detail/:id"
-        element={
-          <Layout>
-            <BarDetailPage />
-          </Layout>
-        }
-      />
+        <Route
+          path="/detail/:id"
+          element={
+            <Layout>
+              <BarDetailPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/reservations"
+          element={
+            <Layout>
+              <MyReservationsPage />
+            </Layout>
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
