@@ -106,7 +106,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
         <ImageSection />
         <div>
           {isLoading ? (
-            <LoadingButton />
+            <LoadingButton isLoading={isLoading} />
           ) : (
             <Button
               type="submit"

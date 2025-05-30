@@ -157,7 +157,7 @@ const UserProfileForm = ({
         </div>
 
         {isLoading ? (
-          <LoadingButton />
+          <LoadingButton isLoading={isLoading} />
         ) : (
           <Button
             type="submit"
@@ -166,6 +166,7 @@ const UserProfileForm = ({
             {buttonText}
           </Button>
         )}
+        
       </form>
     </Form>
   );
