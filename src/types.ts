@@ -1,3 +1,6 @@
+
+
+
 export type User = {
   _id: string;
   email: string;
@@ -5,6 +8,26 @@ export type User = {
   addressLine1: string;
   city: string;
   country: string;
+  role?: "user" | "bar_owner" | "admin";
+  auth0Id: string;
+};
+
+export type BarOwner = User & {
+  role: "bar_owner";
+};
+
+export type Bar = {
+  _id: string;
+  name: string;
+  city: string;
+  country: string;
+  openingHours: string;
+  description: string;
+  location: string;
+  imageUrl: string;
+  capacity: number;
+  user: string;
+  lastUpdated: string;
 };
 
 
@@ -14,17 +37,17 @@ export type MenuItem = {
   price: number;
 };
 
-export type Bar={
-  _id:string;
-  name:string;
-  city:string;
-  country:string;
-  openingHours:string;
-  description:string;
-  location:string;
-  imageUrl: string;
-  lastUpdated:string;
-}
+// export type Bar={
+//   _id:string;
+//   name:string;
+//   city:string;
+//   country:string;
+//   openingHours:string;
+//   description:string;
+//   location:string;
+//   imageUrl: string;
+//   lastUpdated:string;
+// }
 
 
 

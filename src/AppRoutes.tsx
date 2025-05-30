@@ -1,3 +1,5 @@
+
+
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./layout/Layout";
 import HomePage from "./pages/HomePages";
@@ -9,59 +11,43 @@ import SearchPage from "./pages/SearchPage";
 import BarDetailPage from "./pages/BarDetailPage";
 import ReservationConfirmationPage from "./pages/ReservationConfirmationPage";
 import MyReservationsPage from "./pages/MyReservationsPage";
+import AdminDashboardLayout from "./pages/admin/AdminDashboardLayout";
+import AdminDashboardHome from "./pages/admin/AdminDashboardHome";
+import AdminBarOwnersList from "./pages/admin/AdminBarOwnersList";
+import AdminBarOwnerForm from "./pages/admin/AdminBarOwnerForm";
+import AdminBarOwnerBars from "./pages/admin/AdminBarOwnerBars";
+import { useAuth0 } from "@auth0/auth0-react";
+// Add this debugging component
+function RoleDebug() {
+  const { user, isAuthenticated } = useAuth0();
+
+  if (isAuthenticated) {
+    console.log("User object:", user);
+    console.log("Role claim:", user?.["https://bars-app/role"]);
+  }
+
+  return null;
+}
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Layout showHero>
-            <HomePage />
-          </Layout>
-        }
-      />
-      <Route path="/auth-callback" element={<AuthCallbackPage />} />
-      <Route
-        path="/search/:city"
-        element={
-          <Layout showHero={false}>
-            <SearchPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/detail/:id"
-        element={
-          <Layout>
-            <BarDetailPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/reservation-confirmation"
-        element={
-          <Layout>
-            <ReservationConfirmationPage />
-          </Layout>
-        }
-      />
-
-      <Route element={<ProtectedRoute />}>
+    <>
+      <RoleDebug />
+      <Routes>
         <Route
-          path="/user-profile"
+          path="/"
           element={
-            <Layout>
-              <UserProfilePage />
+            <Layout showHero>
+              <HomePage />
             </Layout>
           }
         />
-
+        <Route path="/auth-callback" element={<AuthCallbackPage />} />
         <Route
-          path="/manage-bar"
+          path="/search/:city"
           element={
-            <Layout>
-              <ManageBarPage />
+            <Layout showHero={false}>
+              <SearchPage />
             </Layout>
           }
         />
@@ -74,16 +60,64 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/reservations"
+          path="/reservation-confirmation"
           element={
             <Layout>
-              <MyReservationsPage />
+              <ReservationConfirmationPage />
             </Layout>
           }
         />
-      </Route>
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/user-profile"
+            element={
+              <Layout>
+                <UserProfilePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path="/manage-bar"
+            element={
+              <Layout>
+                <ManageBarPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/detail/:id"
+            element={
+              <Layout>
+                <BarDetailPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/reservations"
+            element={
+              <Layout>
+                <MyReservationsPage />
+              </Layout>
+            }
+          />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route element={<ProtectedRoute roleRequired="admin" />}>
+          <Route path="/admin" element={<AdminDashboardLayout />}>
+            <Route index element={<AdminDashboardHome />} />
+            <Route path="bar-owners" element={<AdminBarOwnersList />} />
+            <Route path="bar-owners/new" element={<AdminBarOwnerForm />} />
+            <Route path="bar-owners/:id/edit" element={<AdminBarOwnerForm />} />
+            <Route path="bar-owners/:id/bars" element={<AdminBarOwnerBars />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 };
 
