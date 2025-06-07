@@ -111,7 +111,7 @@ export const useGetAllBars = () => {
     return response.json();
   };
 
-  const { data: bars, isLoading, error } = useQuery(
+  const { data: bars, isLoading, error } = useQuery<Bar[], Error>(
     "fetchBars",
     getAllBarsRequest
   );
