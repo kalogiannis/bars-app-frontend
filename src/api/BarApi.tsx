@@ -96,3 +96,25 @@ export function useAddReview(barId?: string) {
     }
   );
 }
+
+
+
+
+export const useGetAllBars = () => {
+  const getAllBarsRequest = async (): Promise<Bar[]> => {
+    const response = await fetch(`${API_BASE_URL}/api/bar`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get bars");
+    }
+
+    return response.json();
+  };
+
+  const { data: bars, isLoading, error } = useQuery(
+    "fetchBars",
+    getAllBarsRequest
+  );
+
+  return { bars, isLoading, error };
+};

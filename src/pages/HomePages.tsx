@@ -1,7 +1,12 @@
+
 import landingImage from "../assets/landing.png";
 import appDownloadImage from "../assets/appDownload.png";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import { useNavigate } from "react-router-dom";
+import CarouselCards from "@/components/CarouselCards";
+import MenuSection from "@/components/MenuSection";
+import MenuSection2 from "@/components/MenuSection2";
+import DecorationText from "../components/DecorationText";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -22,7 +27,13 @@ const HomePage = () => {
           onSubmit={makeSubmitHandler('/search')}
         />
       </div>
+      <DecorationText text1={'MORE THAN'} span={'Just'} text2={'DRINKS'}/>   
+    <MenuSection/>
+    
+    <MenuSection2/>
+      <DecorationText text1={'SOME OF THE'} span={'BEST'} text2={'BARS IN YOUR CITY!'}/>
 
+    <CarouselCards/>
       <div className="grid md:grid-cols-2 gap-5">
         <img src={landingImage} />
         <div className="flex flex-col items-center justify-center gap-4 text-center">
