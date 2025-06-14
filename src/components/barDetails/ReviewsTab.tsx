@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useAuth0, User } from '@auth0/auth0-react';
 import { useLocation } from 'react-router-dom';
 import {
@@ -35,23 +35,20 @@ type ReviewsTabProps = {
   loading: boolean;
 };
 
-const ReviewsTab: React.FC<ReviewsTabProps> = ({
+const ReviewsTab= ({
   summary,
   reviews,
   onAdd,
   loading
-}) => {
+}:ReviewsTabProps) => {
   const { isAuthenticated, user, loginWithRedirect } = useAuth0<User>();
   const location = useLocation();
 
-  // Derive the reviewer name from Auth0 user profile
   const authName = user?.name ?? user?.nickname ?? '';
 
-  // Determine if this user has already reviewed
   const hasReviewed =
     isAuthenticated && reviews.some(r => r.reviewer === authName);
 
-  // Initialize reviewer state with authName and update on change
   const [reviewer, setReviewer] = useState<string>(authName);
   useEffect(() => {
     setReviewer(authName);

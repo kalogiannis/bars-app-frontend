@@ -14,10 +14,7 @@ type Reservation = {
   createdAt: string;
   updatedAt: string;
 }
-/** 
- * Fetch how many seats are still free for a given bar/date/time/partySize 
- * → GET /api/bar/:barId/reservations/availability
- */
+
 export function useCheckAvailability(
   barId: string,
   date: string,
@@ -47,15 +44,12 @@ export function useCheckAvailability(
   );
 }
 
-/** 
- * Create a new reservation 
- * → POST /api/bar/:barId/reservations
- */
+
 export function useCreateReservation(barId: string) {
    const { getAccessTokenSilently } = useAuth0();
   const qc = useQueryClient();
   return useMutation<
-    Reservation,                              // server returns the created reservation object
+    Reservation,                              
     Error,
     { date: string; time: string; partySize: string; refid: string }
   >(

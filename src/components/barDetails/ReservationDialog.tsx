@@ -43,7 +43,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
   const avail = useCheckAvailability(barId, date, time, Number(people));
   const createRes = useCreateReservation(barId);
 
-  // 1) Build slot list whenever openingHours changes
   useEffect(() => {
     const parts = openingHours.split(/[–-]/).map(s => s.trim());
     if (parts.length !== 2 || !parts[0] || !parts[1]) {
@@ -55,7 +54,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
     const startDt = new Date(`2000-01-01T${startStr}`);
     let endDt = new Date(`2000-01-01T${endStr}`);
 
-    // if end ≤ start, we’ve rolled past midnight
     if (endDt <= startDt) {
       endDt = new Date(endDt.getTime() + 24 * 60 * 60 * 1000);
     }
@@ -74,7 +72,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
     setSlots(arr);
   }, [openingHours]);
 
-  // 2) Initialize time once when slots first become available
   useEffect(() => {
     if (slots.length > 0 && time === '') {
       setTime(slots[0]);
@@ -138,7 +135,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          {/* People */}
           <div className="grid grid-cols-2 items-center gap-2">
             <Label htmlFor="people">People</Label>
             <Select value={people} onValueChange={setPeople}>
@@ -155,7 +151,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
             </Select>
           </div>
 
-          {/* Date */}
           <div className="grid grid-cols-2 items-center gap-2">
             <Label htmlFor="date">Date</Label>
             <Input
@@ -167,7 +162,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
             />
           </div>
 
-          {/* Time */}
           <div className="grid grid-cols-2 items-center gap-2">
             <Label htmlFor="time">Time</Label>
             <Select value={time} onValueChange={setTime}>
@@ -184,7 +178,6 @@ const ReservationDialog= ({ barId, barName, openingHours }:Props) => {
             </Select>
           </div>
 
-          {/* Availability */}
           {avail.data && (
             <p className={avail.data.isAvailable ? 'text-green-600' : 'text-red-600'}>
               {avail.data.isAvailable

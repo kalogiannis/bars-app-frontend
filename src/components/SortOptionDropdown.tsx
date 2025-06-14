@@ -1,3 +1,4 @@
+
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -21,15 +22,15 @@ const SORT_OPTIONS = [
     value: "capacity",
   },
   {
-    label: "Last Updated",
-    value: "lastUpdated",
+    label: "Most Reviewed", 
+    value: "mostReviewed", 
   },
 ];
 
 const SortOptionDropdown = ({ onChange, sortOption }: Props) => {
   const selectedSortLabel =
     SORT_OPTIONS.find((option) => option.value === sortOption)?.label ||
-    SORT_OPTIONS[0].label;
+    SORT_OPTIONS[2].label;
 
   return (
     <DropdownMenu>

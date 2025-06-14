@@ -25,6 +25,12 @@ const MobileNavLinks = () => {
       >
         My Bar
       </Link>
+       <Link
+        to="/favorites"
+        className="flex  items-center font-bold text-gray-500 hover:text-white"
+      >
+        Favorites
+      </Link>
       <Button
         onClick={() => logout(logoutOptions)}
         className="flex items-center px-3 font-bold bg-blue-500 hover:bg-blue-400"

@@ -75,16 +75,16 @@ export function useGetReviews(barId?: string) {
 export function useAddReview(barId?: string) {
   const qc = useQueryClient();
   return useMutation<
-    Review,                // the created Review comes back
+    Review,                
     Error,
-    { reviewer: string; comment: string; rating: number }  // now includes rating
+    { reviewer: string; comment: string; rating: number }  
   >(
     async (newReview) => {
       if (!barId) throw new Error("No bar ID provided");
       const res = await fetch(`${API_BASE_URL}/api/bar/${barId}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newReview),  // { reviewer, comment, rating }
+        body: JSON.stringify(newReview),  
       });
       if (!res.ok) throw new Error("Failed to add review");
       return res.json();

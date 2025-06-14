@@ -13,7 +13,6 @@ const AdminBarOwnerForm = () => {
   const isEditMode = id !== "new";
   const navigate = useNavigate();
   
-  // Initialize hooks unconditionally
   const { barOwner, isLoading: isLoadingBarOwner } = useGetBarOwnerById(isEditMode ? id! : "placeholder");
   const { createBarOwner, isLoading: isCreating } = useCreateBarOwner();
   const { updateBarOwner, isLoading: isUpdating } = useUpdateBarOwner(isEditMode ? id! : "placeholder");
@@ -27,7 +26,6 @@ const AdminBarOwnerForm = () => {
     country: "",
   });
 
-  // Populate form when editing and data is loaded
   useEffect(() => {
     if (isEditMode && barOwner) {
       setFormData({
@@ -59,12 +57,12 @@ const AdminBarOwnerForm = () => {
         const { email, auth0Id, ...updateData } = formData;
         await updateBarOwner(updateData);
       } else {
-        // For create mode, we need all fields
         await createBarOwner(formData);
       }
       
       navigate("/admin/bar-owners");
     } catch (error) {
+      console.log(error)
       toast.error(`Failed to ${isEditMode ? "update" : "create"} bar owner`);
     }
   };

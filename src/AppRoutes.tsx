@@ -1,5 +1,4 @@
 
-
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./layout/Layout";
 import HomePage from "./pages/HomePages";
@@ -16,8 +15,10 @@ import AdminDashboardHome from "./pages/admin/AdminDashboardHome";
 import AdminBarOwnersList from "./pages/admin/AdminBarOwnersList";
 import AdminBarOwnerForm from "./pages/admin/AdminBarOwnerForm";
 import AdminBarOwnerBars from "./pages/admin/AdminBarOwnerBars";
+import { DrinkMenuPage } from "./pages/DrinkMenuPage";
 import { useAuth0 } from "@auth0/auth0-react";
-// Add this debugging component
+import { FavoritesPage } from "./pages/FavoritesPage";
+
 function RoleDebug() {
   const { user, isAuthenticated } = useAuth0();
 
@@ -60,6 +61,14 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/bar/:barId/menu"
+          element={
+            <Layout>
+              <DrinkMenuPage />
+            </Layout>
+          }
+        />
+        <Route
           path="/reservation-confirmation"
           element={
             <Layout>
@@ -67,6 +76,7 @@ const AppRoutes = () => {
             </Layout>
           }
         />
+     
 
         <Route element={<ProtectedRoute />}>
           <Route
@@ -99,6 +109,14 @@ const AppRoutes = () => {
             element={
               <Layout>
                 <MyReservationsPage />
+              </Layout>
+            }
+          />
+              <Route
+            path="/favorites"
+            element={
+              <Layout>
+                <FavoritesPage />
               </Layout>
             }
           />

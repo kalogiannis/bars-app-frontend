@@ -30,18 +30,15 @@ export const useCreateMyBar = () => {
   const qc = useQueryClient()
 
   const createMyBarRequest = async (data: FormData): Promise<Bar> => {
-    // grab token
     const token = await getAccessTokenSilently()
-    // NOTE: do NOT set Content-Type here; browser will do it
     const res = await fetch(`${API_BASE_URL}/api/my/bar`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: data, // FormData→ multipart/form-data with boundary
+      body: data, 
     })
     if (!res.ok) {
-      // you can log res.status / res.text() for more detail
       throw new Error('Failed to create bar')
     }
     return res.json()
@@ -68,7 +65,6 @@ export const useUpdateMyBar = () => {
 
   const updateMyBarRequest = async (data: FormData): Promise<Bar> => {
     const token = await getAccessTokenSilently()
-    // again: no Content-Type header
     const res = await fetch(`${API_BASE_URL}/api/my/bar`, {
       method: 'PUT',
       headers: {

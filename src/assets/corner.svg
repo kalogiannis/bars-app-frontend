@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+>
+  <path
+    d="M4,60 L4,8 C4,4 8,4 8,4 L60,4"
+    stroke="#FBBF24"
+    stroke-width="2"
+  />
+  <!-- Decorative leaf cluster -->
+  <path
+    d="M10 8
+       c-2,4 4,8 8,4
+       c-4,2 -2,8 2,6
+       c-4,1 -1,-6 -6,-10Z"
+    fill="#FBBF24"
+  />
+  <!-- Dotted edge -->
+  <path
+    d="M12,4 h44"
+    stroke="#FBBF24"
+    stroke-width="1"
+    stroke-dasharray="2,4"
+  />
+  <path
+    d="M4,12 v44"
+    stroke="#FBBF24"
+    stroke-width="1"
+    stroke-dasharray="2,4"
+  />
+</svg>

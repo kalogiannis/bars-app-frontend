@@ -17,7 +17,6 @@ const AdminBarOwnersList = () => {
         refetch();
       } catch (error) {
         toast.error("Failed to delete bar owner");
-        //mine
         console.log(error)
       }
     }

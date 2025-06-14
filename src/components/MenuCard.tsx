@@ -12,8 +12,7 @@ const MenuCard = ({ img, title }: Props) => {
             console.log("Navigating to:", `/search/${title}`);
             navigate(`/search/${title.toLowerCase()}`);
           }}>
-{/*       <div className="p-4 border rounded-lg shadow-md">*/}
-            {/* Container with fixed height and aspect ratio */}
+
             <div className="h-64 aspect-w-16 aspect-h-9">
                 <img
                     src={img}

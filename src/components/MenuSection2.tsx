@@ -31,7 +31,6 @@ const MenuSection2 = () => {
   return (
     <div className="w-full py-16 ">
       <div className="container mx-auto px-4">
-        {/* Header Section */}
         <div className="text-center mb-16">
           <h3 className="text-[#F9A826] font-semibold mb-3 tracking-wide uppercase">
             WELCOME TO PATIO.TIME TEA HOUSE
@@ -56,7 +55,6 @@ const MenuSection2 = () => {
           </p>
         </div>
 
-        {/* Menu Items - Responsive layout */}
         <div className="flex flex-col md:flex-row flex-wrap max-w-7xl mx-auto justify-center py-10 px-4">
           {menuItems.map((item, index) => (
             <div 

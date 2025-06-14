@@ -26,7 +26,6 @@ const UsernameMenu = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="bg-gray-900 text-white">
-        {/* override Radix’s data-highlighted background */}
         <DropdownMenuItem className="data-[highlighted]:bg-gray-900">
           <Link to="/user-profile" className="font-bold hover:text-white text-gray-500">
             User Profile
@@ -44,6 +43,13 @@ const UsernameMenu = () => {
             Reservations
           </Link>
         </DropdownMenuItem>
+
+         <DropdownMenuItem className="data-[highlighted]:bg-gray-900">
+          <Link to="/favorites" className="font-bold hover:text-white text-gray-500">
+            Favorites
+          </Link>
+        </DropdownMenuItem>
+
         <Separator />
 
         <DropdownMenuItem className="data-[highlighted]:bg-gray-900">

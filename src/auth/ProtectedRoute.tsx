@@ -1,5 +1,4 @@
 
-
 import  { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate, Outlet } from "react-router-dom";
@@ -11,7 +10,6 @@ type ProtectedRouteProps = {
 const ProtectedRoute = ({ roleRequired }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
   
-  // Add this effect to log the actual token
   useEffect(() => {
     const checkToken = async () => {
       if (isAuthenticated) {
@@ -19,7 +17,6 @@ const ProtectedRoute = ({ roleRequired }: ProtectedRouteProps) => {
           const token = await getAccessTokenSilently({ detailedResponse: true });
           console.log("Full token response:", token);
           
-          // Decode and log the token payload
           const payload = JSON.parse(atob(token.id_token.split('.')[1]));
           console.log("Decoded token payload:", payload);
           console.log("Role from token:", payload["https://bars-app/role"] );
@@ -41,14 +38,11 @@ const ProtectedRoute = ({ roleRequired }: ProtectedRouteProps) => {
     return null;
   }
 
-  // If not authenticated, redirect to home
   if (!isAuthenticated) {
     return <Navigate to={"/"} replace />;
   }
 
-  // If role is required but user doesn't have the required role
   if (roleRequired && user && user["https://bars-app/role"] !== roleRequired ) {
-    // Redirect to home or another appropriate page
     return <Navigate to={"/"} replace />;
   }
 

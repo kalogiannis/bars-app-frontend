@@ -1,6 +1,5 @@
 
 
-
 export type User = {
   _id: string;
   email: string;
@@ -36,21 +35,6 @@ export type MenuItem = {
   name: string;
   price: number;
 };
-
-// export type Bar={
-//   _id:string;
-//   name:string;
-//   city:string;
-//   country:string;
-//   openingHours:string;
-//   description:string;
-//   location:string;
-//   imageUrl: string;
-//   lastUpdated:string;
-// }
-
-
-
 
 export type BarSearchResponse = {
   data: Bar[];
@@ -96,4 +80,23 @@ export type Reservation = {
 
   cancelReason?: string;
   cancelledAt?: string;
+};
+
+export type DrinkItem = {
+  _id: string;
+  bar: string;
+  name: string;
+  description: string;
+  price: number;
+  category: 'Beer' | 'Wine' | 'Cocktail' | 'Spirit' | 'Non-Alcoholic' | 'Special';
+  imageUrl?: string;
+  featured: boolean;
+  ingredients: string[];
+  alcoholPercentage?: number;
+  createdAt: string;
+};
+
+
+export type FavoriteResponse = {
+  isFavorite: boolean;
 };
