@@ -1,6 +1,15 @@
 
-
+import { motion, Variants } from 'framer-motion';
 import hero from "../assets/hero.jpg";
+
+const headingVariants: Variants = {
+  hidden: { y: -20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
 
 const Hero = () => {
   return (
@@ -14,9 +23,15 @@ const Hero = () => {
       <div className="absolute inset-0 bg-gray-900/20" />
 
       <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white drop-shadow-md">
+        <motion.h1
+          className="text-4xl md:text-6xl font-extrabold text-white drop-shadow-md"
+          variants={headingVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+        >
           App for Bars
-        </h1>
+        </motion.h1>
       </div>
     </div>
   );

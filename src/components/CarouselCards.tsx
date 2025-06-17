@@ -19,7 +19,7 @@ const CarouselCards = () => {
   if (!bars?.length) return <div>No bars available</div>;
 
   return (
-    <Carousel className="w-full">
+    <Carousel className="w-full overflow-hidden">
       <CarouselContent className="flex gap-4">
         {bars.map((bar) => (
           <CarouselItem
@@ -42,11 +42,12 @@ const CarouselCards = () => {
         ))}
       </CarouselContent>
 
-      <CarouselPrevious className="text-black hover:text-customBrown transition-colors" />
-      <CarouselNext className="text-black hover:text-customBrown transition-colors" />
+      <CarouselPrevious className="absolute left-2 text-black hover:text-customBrown transition-colors" />
+      <CarouselNext className="absolute right-2 text-black hover:text-customBrown transition-colors" />
     </Carousel>
   );
 };
 
 export default CarouselCards;
+
 

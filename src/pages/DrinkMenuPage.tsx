@@ -1,19 +1,23 @@
 
-import  { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useDrinkMenu, useFeaturedDrinks } from "../api/DrinkMenuApi";
 import { DrinkCategorySection } from "../components/DrinkCategorySection";
 import { DrinkItem } from "../types";
 import { Spinner } from "../components/Spinner";
-import CornerIcon from "../assets//corner.png"
+import CornerIcon from "../assets//corner.png";
 import { useGetBar } from "@/api/BarApi";
+import { Button } from "@/components/ui/button";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { Phone, ArrowLeft, CalendarDays } from "lucide-react";
 
-export const DrinkMenuPage= () => {
+export const DrinkMenuPage = () => {
   const { barId } = useParams<{ barId: string }>();
   const { data: allDrinks, isLoading: isLoadingAll } = useDrinkMenu(barId || "");
   const { data: featuredDrinks, isLoading: isLoadingFeatured } = useFeaturedDrinks(barId || "");
   const [categories, setCategories] = useState<Record<string, DrinkItem[]>>({});
-  const {data} = useGetBar(barId)
+  const { data } = useGetBar(barId);
+
   useEffect(() => {
     if (allDrinks && allDrinks.length) {
       const grouped = allDrinks.reduce((acc, d) => {
@@ -22,7 +26,6 @@ export const DrinkMenuPage= () => {
         return acc;
       }, {} as Record<string, DrinkItem[]>);
       setCategories(grouped);
-
     }
   }, [allDrinks, barId]);
 
@@ -44,6 +47,30 @@ export const DrinkMenuPage= () => {
             <span className="text-2xl text-white tracking-widest">MENU</span>
             <div className="h-px w-24 bg-amber-300" />
           </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
+          <Link to={`/detail/${barId}`}>
+            <Button variant="outline" className="text-black border-white hover:bg-white hover:text-gray-700 ">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Bar Details
+            </Button>
+          </Link>
+          <Link to={`/bar/${barId}/reserve`}>
+            <Button variant="outline" className="text-black border-white hover:bg-white hover:text-gray-700">
+              <CalendarDays className="mr-2 h-4 w-4" />
+              Make a Reservation
+            </Button>
+          </Link>
+         {/*  <a href={`tel:${data?.phoneNumber || "+1234567890"}`}> */}
+          <a href={`tel:${data?.name || "+1234567890"}`}>
+            <Button variant="outline" className="text-black border-white hover:bg-white hover:text-gray-700">
+              <Phone className="mr-2 h-4 w-4" />
+              Call Bar
+            </Button>
+          </a>
+          {barId && <FavoriteButton barId={barId} className="text-white border-white hover:bg-white hover:text-gray-900" />}
         </div>
 
         {loading ? (
@@ -93,3 +120,5 @@ export const DrinkMenuPage= () => {
     </div>
   );
 };
+
+

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Bar } from "../types";
 import { FavoriteButton } from "./FavoriteButton";
 
@@ -9,8 +10,8 @@ type BarCardProps = {
 
 export const BarCard = ({ bar, onClick, showFavoriteButton = false }: BarCardProps) => {
   return (
-    <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+    <motion.div  whileTap={{ scale: 0.95 }}
+      className="bg-gradient-to-br from-gray-800 to-gray-900  rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
       onClick={onClick}
     >
       <div className="relative h-48">
@@ -30,6 +31,6 @@ export const BarCard = ({ bar, onClick, showFavoriteButton = false }: BarCardPro
         <p className="text-gray-600 text-sm mb-2">{bar.city}, {bar.country}</p>
         <p className="text-gray-500 text-sm truncate">{bar.description}</p>
       </div>
-    </div>
+    </motion.div>
   );
 };

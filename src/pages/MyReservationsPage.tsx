@@ -21,7 +21,6 @@ const MyReservationsPage = () => {
   const { data: reservations, isLoading: isReservationsLoading } =
     useGetMyReservations();
   const cancelResMutation = useCancelReservation();
-  // state for cancellation dialog
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reason, setReason] = useState("");
@@ -61,7 +60,7 @@ const MyReservationsPage = () => {
             reservations.map((res) => (
               <div
                 key={res._id}
-                className="border rounded-lg p-4 flex justify-between items-center"
+                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-4 flex justify-between items-center"
               >
                 <div>
                   <h3 className="font-semibold">{res.bar.name}</h3>

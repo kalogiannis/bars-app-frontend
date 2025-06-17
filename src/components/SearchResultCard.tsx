@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { MapPin, Star } from "lucide-react";
 import { FavoriteButton } from "./FavoriteButton";
 import { useGetReviews } from "@/api/BarApi";
+import { motion } from "framer-motion";
 
 type Props = {
   bar: Bar;
@@ -15,10 +16,12 @@ const SearchResultCard = ({ bar }: Props) => {
   const averageRating = reviewsData?.summary.average ?? 0;
   const totalReviews = reviewsData?.summary.total ?? 0;
   const reviewText = totalReviews === 1 ? "review" : "reviews";
+  const MotionLink = motion(Link);
+
   return (
-    <Link
+    <MotionLink whileTap={{ scale: 0.95 }}
       to={`/detail/${bar._id}`}
-      className="grid lg:grid-cols-[2fr_3fr] gap-5 group hover:bg-gray-800 transition-colors rounded"
+      className="grid lg:grid-cols-[2fr_3fr] gap-5 group hover:bg-gray-800 transition-colors rounded mt-5"
     >
       <AspectRatio ratio={16 / 6} className="rounded-md overflow-hidden">
         <img
@@ -61,7 +64,7 @@ const SearchResultCard = ({ bar }: Props) => {
           <Button variant="destructive">Details</Button>
         </div>
       </div>
-    </Link>
+    </MotionLink>
   );
 };
 
