@@ -15,20 +15,20 @@ const cardVariants: Variants = {
 const MenuSection = () => {
   const myArray = [
     {
-      title: "Athens",
-      img: "https://images.unsplash.com/photo-1453899242646-c74d86b5b8e8?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=05993ddfa31268c29b2e7e253d9b112b"
-    },
-    {
       title: "Thessaloniki",
-      img: "https://images.unsplash.com/photo-1417325384643-aac51acc9e5d?q=75&fm=jpg&w=1080&fit=max"
+      img: "https://images.unsplash.com/photo-1620050248206-f5c11bd7f1f2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       title: "Patra",
-      img: "https://images.unsplash.com/photo-1523476843875-43c2cb89aa85?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=ebbc04144bf8882ca12eba50d95f1150"
+      img: "https://images.unsplash.com/photo-1603387478792-56d8bd233046?q=80&w=763&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       title: "Alexandroupoli",
-      img: "https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg&fit=crop&w=1080&q=80&fit=max"
+      img: "https://images.unsplash.com/photo-1730206658429-f2c28685eb21?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+     {
+      title: "Athens",
+      img: "https://images.unsplash.com/photo-1599423217192-34da246be9e8?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ];
 

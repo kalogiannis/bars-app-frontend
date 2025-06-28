@@ -1,13 +1,11 @@
+import { motion, Variants } from "framer-motion";
 
-import { motion, Variants } from 'framer-motion';
-
-// Variants for staggered card animations 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: (index: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: index * 0.3, duration: 0.6 }
+    transition: { delay: index * 0.3, duration: 0.6 },
   }),
 };
 
@@ -21,28 +19,31 @@ interface MenuItem {
 const MenuSection2 = () => {
   const menuItems: MenuItem[] = [
     {
-      title: "SPRING SALAD",
+      title: "Dive Bar",
       price: "$16",
-      description: "Cherry tomatoes, mozzarella, toast and sweet peas.",
-      img: "https://images.unsplash.com/photo-1453899242646-c74d86b5b8e8?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=05993ddfa31268c29b2e7e253d9b112b"
+      description:
+        "Unpretentious, laid-back, often a bit worn around the edges",
+      img: "https://images.unsplash.com/photo-1692455129272-60299bc2b1a8?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "ARUGULA SALAD",
+      title: "Sports Bar",
       price: "$18",
-      description: "Ricotta, goat cheese, beetroot and datterini.",
-      img: "https://images.unsplash.com/photo-1417325384643-aac51acc9e5d?q=75&fm=jpg&w=1080&fit=max"
+      description: "Energetic, multiple big-screen TVs showing live games",
+      img: "https://images.unsplash.com/photo-1671368913134-c211bc02487f?q=80&w=1098&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "CROISSANT",
+      title: "Cocktail Lounge",
       price: "$12",
-      description: "Classic french croissants, freeze-dried strawberries, frosting.",
-      img: "https://images.unsplash.com/photo-1523476843875-43c2cb89aa85?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=ebbc04144bf8882ca12eba50d95f1150"
+      description:
+        "Craft cocktails using premium spirits, fresh-pressed juices, housemade syrups",
+      img: "https://plus.unsplash.com/premium_photo-1670333183141-9e3ffc533dfa?q=80&w=1112&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "LE CREPE",
+      title: "Wine Bar",
       price: "$16",
-      description: "Crepe, cream, vanilla and fresh strawberry slices.",
-      img: "https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg&fit=crop&w=1080&q=80&fit=max"
+      description:
+        "Curated list of wines by the glass/bottle—often focusing on a region or style—plus cheese and charcuterie boards",
+      img: "https://plus.unsplash.com/premium_photo-1677327746194-1757bf34c80c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
   ];
 
@@ -82,18 +83,20 @@ const MenuSection2 = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              className={`flex flex-col items-center text-center px-4 mb-12 md:mb-6 w-full md:w-1/4 max-w-[300px] mx-auto ${
-                index === 0 || index === menuItems.length - 1 ? 'md:-mt-16' : ''
+              className={`group flex flex-col items-center text-center px-4 mb-12 md:mb-6 w-full md:w-1/4 max-w-[300px] mx-auto ${
+                index === 0 || index === menuItems.length - 1 ? "md:-mt-16" : ""
               }`}
             >
               <div className="w-48 h-48 rounded-full overflow-hidden mb-6 shadow-md mx-auto">
                 <img
                   src={item.img}
                   alt={item.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition duration-300 ease-in-out filter group-hover:sepia"
                 />
               </div>
-              <h4 className="text-lg font-medium uppercase mb-2">{item.title}</h4>
+              <h4 className="text-lg font-medium uppercase mb-2">
+                {item.title}
+              </h4>
               <p className="font-medium text-[#F9A826] mb-2">{item.price}</p>
               <p className="text-center text-gray-600 text-sm max-w-xs">
                 {item.description}
