@@ -1,5 +1,4 @@
 
-
 export type User = {
   _id: string;
   email: string;
@@ -24,6 +23,7 @@ export type Bar = {
   description: string;
   location: string;
   imageUrl: string;
+  category: string;
   capacity: number;
   user: string;
   lastUpdated: string;

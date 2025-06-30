@@ -1,5 +1,4 @@
 
-
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { SearchState } from "@/pages/SearchPage";
 import { Bar, BarSearchResponse, Review, ReviewsResponse } from "@/types";
@@ -53,7 +52,6 @@ export function useGetBar(id?: string) {
 
 
 
-/** Fetch all reviews for a given bar */
 export function useGetReviews(barId?: string) {
   return useQuery<ReviewsResponse, Error>(
     ["fetchReviews", barId],
@@ -71,7 +69,6 @@ export function useGetReviews(barId?: string) {
 
 
 
-// change the generic for useAddReview to include rating
 export function useAddReview(barId?: string) {
   const qc = useQueryClient();
   return useMutation<
@@ -117,4 +114,41 @@ export const useGetAllBars = () => {
   );
 
   return { bars, isLoading, error };
+};
+
+export const useGetBarsByCategory = (searchState: {
+  category: string;
+  page: number;
+  sortOption: string;
+  city?: string;
+}) => {
+  const getBarsByCategoryRequest = async (): Promise<BarSearchResponse> => {
+    const params = new URLSearchParams();
+    params.set("page", searchState.page.toString());
+    params.set("sortOption", searchState.sortOption);
+    
+    if (searchState.city) {
+      params.set("city", searchState.city);
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/bar/category/${searchState.category}?${params.toString()}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get bars by category");
+    }
+
+    return response.json();
+  };
+
+  const { data: results, isLoading } = useQuery(
+    ["getBarsByCategory", searchState],
+    getBarsByCategoryRequest
+  );
+
+  return {
+    results,
+    isLoading,
+  };
 };

@@ -8,6 +8,7 @@ import {
   FormDescription, 
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
 
 const Details = () => {
@@ -125,6 +126,30 @@ const Details = () => {
                 placeholder="Physical address or neighborhood…"
                 className="bg-gray-700 text-white border border-gray-600 focus:border-blue-500 rounded-lg p-3 transition duration-200 ease-in-out placeholder-gray-500"
               />
+            </FormControl>
+            <FormMessage className="text-red-400 text-sm" />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="category"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-gray-300 text-base">Category</FormLabel>
+            <FormControl>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="bg-gray-700 text-white border border-gray-600 focus:border-blue-500 rounded-lg p-3 transition duration-200 ease-in-out">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border border-gray-600">
+                  <SelectItem value="Dive Bar">Dive Bar</SelectItem>
+                  <SelectItem value="Sports Bar">Sports Bar</SelectItem>
+                  <SelectItem value="Cocktail Lounge">Cocktail Lounge</SelectItem>
+                  <SelectItem value="Wine Bar">Wine Bar</SelectItem>
+                </SelectContent>
+              </Select>
             </FormControl>
             <FormMessage className="text-red-400 text-sm" />
           </FormItem>

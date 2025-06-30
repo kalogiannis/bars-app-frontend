@@ -1,4 +1,5 @@
 import { motion, Variants } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -75,33 +76,37 @@ const MenuSection2 = () => {
         </div>
 
         <div className="flex flex-col md:flex-row flex-wrap max-w-7xl mx-auto justify-center py-10 px-4">
-          {menuItems.map((item, index) => (
-            <motion.div
+          {menuItems.map((item, index ) => (
+            <Link
               key={index}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
+              to={`/category/${encodeURIComponent(item.title)}`}
               className={`group flex flex-col items-center text-center px-4 mb-12 md:mb-6 w-full md:w-1/4 max-w-[300px] mx-auto ${
                 index === 0 || index === menuItems.length - 1 ? "md:-mt-16" : ""
               }`}
             >
-              <div className="w-48 h-48 rounded-full overflow-hidden mb-6 shadow-md mx-auto">
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition duration-300 ease-in-out filter group-hover:sepia"
-                />
-              </div>
-              <h4 className="text-lg font-medium uppercase mb-2">
-                {item.title}
-              </h4>
-              <p className="font-medium text-[#F9A826] mb-2">{item.price}</p>
-              <p className="text-center text-gray-600 text-sm max-w-xs">
-                {item.description}
-              </p>
-            </motion.div>
+              <motion.div
+                custom={index}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+              >
+                <div className="w-48 h-48 rounded-full overflow-hidden mb-6 shadow-md mx-auto">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition duration-300 ease-in-out filter group-hover:sepia"
+                  />
+                </div>
+                <h4 className="text-lg font-medium uppercase mb-2">
+                  {item.title}
+                </h4>
+                <p className="font-medium text-[#F9A826] mb-2">{item.price}</p>
+                <p className="text-center text-gray-600 text-sm max-w-xs">
+                  {item.description}
+                </p>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>

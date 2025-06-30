@@ -18,6 +18,7 @@ import AdminBarOwnerBars from "./pages/admin/AdminBarOwnerBars";
 import { DrinkMenuPage } from "./pages/DrinkMenuPage";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FavoritesPage } from "./pages/FavoritesPage";
+import CategoryPage from "./pages/CategoryPage";
 
 function RoleDebug() {
   const { user, isAuthenticated } = useAuth0();
@@ -49,6 +50,14 @@ const AppRoutes = () => {
           element={
             <Layout showHero={false}>
               <SearchPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/category/:category"
+          element={
+            <Layout showHero={false}>
+              <CategoryPage />
             </Layout>
           }
         />

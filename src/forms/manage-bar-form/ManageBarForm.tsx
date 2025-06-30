@@ -19,6 +19,9 @@ const formschema = z
     openingHours: z.string().nonempty('Opening hours is required'),
     description: z.string().nonempty('Description is required'),
     location: z.string().nonempty('Location is required'),
+    category: z.enum(['Dive Bar', 'Sports Bar', 'Cocktail Lounge', 'Wine Bar'], {
+      required_error: 'Category is required',
+    }),
     imageUrl: z.string().optional(),
     imageFile: z.instanceof(File, { message: "Image is required" }).optional(),
   })
@@ -47,6 +50,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
           openingHours: bar.openingHours,
           description: bar.description,
           location: bar.location,
+          category: bar.category as 'Dive Bar' | 'Sports Bar' | 'Cocktail Lounge' | 'Wine Bar',
           imageUrl: bar.imageUrl,
           imageFile: undefined, 
         }
@@ -57,6 +61,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
           openingHours: '',
           description: '',
           location: '',
+          category: 'Dive Bar' as const,
           imageUrl: undefined,
           imageFile: undefined,
         },
@@ -73,6 +78,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
         openingHours: bar.openingHours,
         description: bar.description,
         location: bar.location,
+        category: bar.category as 'Dive Bar' | 'Sports Bar' | 'Cocktail Lounge' | 'Wine Bar',
         imageUrl: bar.imageUrl,
         imageFile: undefined,
       });
@@ -88,6 +94,7 @@ const BarForm = ({ bar, isLoading, onSave }: Props) => {
     formData.append("openingHours", values.openingHours);
     formData.append("description", values.description);
     formData.append("location", values.location);
+    formData.append("category", values.category);
 
     if (values.imageFile) {
       formData.append("imageFile", values.imageFile);

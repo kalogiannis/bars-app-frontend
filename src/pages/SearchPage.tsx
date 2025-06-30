@@ -111,6 +111,7 @@ const SearchPage = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
       <div className="flex flex-col gap-5">
+        <h3 className="text-lg font-semibold ">Filter by City</h3>
         <CityRadioGroup
           onCityChange={handleCityChange}
           selectedCity={searchState.selectedCity}
