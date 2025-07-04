@@ -1,3 +1,4 @@
+
 import { Link, Outlet } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -54,3 +55,4 @@ const AdminDashboardLayout = () => {
 };
 
 export default AdminDashboardLayout;
+

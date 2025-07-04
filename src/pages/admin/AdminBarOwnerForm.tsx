@@ -1,4 +1,5 @@
-import  { useState, useEffect } from "react";
+
+import  { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCreateBarOwner, useGetBarOwnerById, useUpdateBarOwner } from "@/api/AdminApi";
 import { Button } from "@/components/ui/button";
@@ -13,9 +14,9 @@ const AdminBarOwnerForm = () => {
   const isEditMode = id !== "new";
   const navigate = useNavigate();
   
-  const { barOwner, isLoading: isLoadingBarOwner } = useGetBarOwnerById(isEditMode ? id! : "placeholder");
+  const { barOwner, isLoading: isLoadingBarOwner } = useGetBarOwnerById(isEditMode ? id! : undefined);
   const { createBarOwner, isLoading: isCreating } = useCreateBarOwner();
-  const { updateBarOwner, isLoading: isUpdating } = useUpdateBarOwner(isEditMode ? id! : "placeholder");
+  const { updateBarOwner, isLoading: isUpdating } = useUpdateBarOwner();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -39,7 +40,7 @@ const AdminBarOwnerForm = () => {
     }
   }, [isEditMode, barOwner]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -47,17 +48,37 @@ const AdminBarOwnerForm = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     try {
-      if (isEditMode && updateBarOwner) {
-        // For edit mode, we don't send email and auth0Id
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { email, auth0Id, ...updateData } = formData;
+      if (isEditMode && updateBarOwner && barOwner) {
+
+        const updateData = {
+          _id: barOwner._id,
+          email: barOwner.email, 
+          auth0Id: barOwner.auth0Id, 
+          role: barOwner.role, 
+          name: formData.name,
+          addressLine1: formData.addressLine1,
+          city: formData.city,
+          country: formData.country,
+        };
         await updateBarOwner(updateData);
+        toast.success("Bar owner updated successfully");
       } else {
-        await createBarOwner(formData);
+        const createData = {
+          _id: "", 
+          email: formData.email,
+          auth0Id: formData.auth0Id,
+          role: "bar_owner" as const,
+          name: formData.name,
+          addressLine1: formData.addressLine1,
+          city: formData.city,
+          country: formData.country,
+        };
+        await createBarOwner(createData);
+        toast.success("Bar owner created successfully");
       }
       
       navigate("/admin/bar-owners");
@@ -175,3 +196,5 @@ const AdminBarOwnerForm = () => {
 };
 
 export default AdminBarOwnerForm;
+
+

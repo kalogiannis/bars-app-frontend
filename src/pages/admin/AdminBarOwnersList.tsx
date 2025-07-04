@@ -1,4 +1,5 @@
-import { useGetAllBarOwners, useDeleteBarOwner } from "@/api/AdminApi";
+
+import { useGetAllBarOwners, useDeleteBarOwner, BarOwner } from "@/api/AdminApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -37,7 +38,7 @@ const AdminBarOwnersList = () => {
 
       {barOwners && barOwners.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {barOwners.map((owner) => (
+          {barOwners.map((owner: BarOwner) => (
             <Card key={owner._id} className="overflow-hidden">
               <CardHeader className="bg-slate-50">
                 <CardTitle className="text-xl">{owner.name || "Unnamed Owner"}</CardTitle>
