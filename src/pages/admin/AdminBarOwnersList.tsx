@@ -3,13 +3,41 @@ import { useGetAllBarOwners, useDeleteBarOwner, BarOwner } from "@/api/AdminApi"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import SearchBar, { SearchForm } from "@/components/SearchBar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const AdminBarOwnersList = () => {
   const { barOwners, isLoading, refetch } = useGetAllBarOwners();
   const { deleteBarOwner } = useDeleteBarOwner();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredBarOwners, setFilteredBarOwners] = useState<BarOwner[]>([]);
+
+  // Filter bar owners based on search query
+  const handleSearch = (searchFormData: SearchForm) => {
+    const query = searchFormData.searchQuery.toLowerCase();
+    setSearchQuery(query);
+    
+    if (barOwners) {
+      const filtered = barOwners.filter((owner: BarOwner) =>
+        owner.name?.toLowerCase().includes(query) ||
+        owner.email?.toLowerCase().includes(query) ||
+        owner.city?.toLowerCase().includes(query) ||
+        owner.country?.toLowerCase().includes(query)
+      );
+      setFilteredBarOwners(filtered);
+    }
+  };
+
+  const handleReset = () => {
+    setSearchQuery("");
+    setFilteredBarOwners([]);
+  };
+
+  // Use filtered results if search is active, otherwise use all bar owners
+  const displayedBarOwners = searchQuery ? filteredBarOwners : barOwners;
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this bar owner? This will also delete all associated bars.")) {
@@ -36,9 +64,19 @@ const AdminBarOwnersList = () => {
         </Button>
       </div>
 
-      {barOwners && barOwners.length > 0 ? (
+      {/* Search Bar */}
+      <div className="mb-6">
+        <SearchBar
+          onSubmit={handleSearch}
+          onReset={handleReset}
+          placeHolder="Search bar owners by name, email, city, or country..."
+          searchQuery={searchQuery}
+        />
+      </div>
+
+      {displayedBarOwners && displayedBarOwners.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {barOwners.map((owner: BarOwner) => (
+          {displayedBarOwners.map((owner: BarOwner) => (
             <Card key={owner._id} className="overflow-hidden">
               <CardHeader className="bg-slate-50">
                 <CardTitle className="text-xl">{owner.name || "Unnamed Owner"}</CardTitle>

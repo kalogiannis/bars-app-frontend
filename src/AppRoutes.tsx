@@ -1,4 +1,3 @@
-
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./layout/Layout";
 import HomePage from "./pages/HomePages";
@@ -15,6 +14,8 @@ import AdminDashboardHome from "./pages/admin/AdminDashboardHome";
 import AdminBarOwnersList from "./pages/admin/AdminBarOwnersList";
 import AdminBarOwnerForm from "./pages/admin/AdminBarOwnerForm";
 import AdminBarOwnerBars from "./pages/admin/AdminBarOwnerBars";
+import AdminUsersList from "./pages/admin/AdminUsersList";
+import AdminUserForm from "./pages/admin/AdminUserForm";
 import { DrinkMenuPage } from "./pages/DrinkMenuPage";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FavoritesPage } from "./pages/FavoritesPage";
@@ -85,7 +86,7 @@ const AppRoutes = () => {
             </Layout>
           }
         />
-     
+
 
         <Route element={<ProtectedRoute />}>
           <Route
@@ -121,7 +122,7 @@ const AppRoutes = () => {
               </Layout>
             }
           />
-              <Route
+          <Route
             path="/favorites"
             element={
               <Layout>
@@ -131,7 +132,8 @@ const AppRoutes = () => {
           />
         </Route>
 
-        {/* Admin Routes */}
+
+               {/* Admin Routes */}
         <Route element={<ProtectedRoute roleRequired="admin" />}>
           <Route path="/admin" element={<AdminDashboardLayout />}>
             <Route index element={<AdminDashboardHome />} />
@@ -139,6 +141,9 @@ const AppRoutes = () => {
             <Route path="bar-owners/new" element={<AdminBarOwnerForm />} />
             <Route path="bar-owners/:id/edit" element={<AdminBarOwnerForm />} />
             <Route path="bar-owners/:id/bars" element={<AdminBarOwnerBars />} />
+            <Route path="users" element={<AdminUsersList />} />
+            <Route path="users/new" element={<AdminUserForm />} />
+            <Route path="users/:id/edit" element={<AdminUserForm />} />
           </Route>
         </Route>
 

@@ -10,8 +10,10 @@ import { toast } from "sonner";
 import LoadingButton from "@/components/LoadingButton";
 
 const AdminBarOwnerForm = () => {
-  const { id } = useParams<{ id: string }>();
-  const isEditMode = id !== "new";
+  // const { id } = useParams<{ id: string }>();
+  // const isEditMode = id !== "new";
+  const { id } = useParams<{ id?: string }>();
+  const isEditMode = Boolean(id) && id !== "new";
   const navigate = useNavigate();
   
   const { barOwner, isLoading: isLoadingBarOwner } = useGetBarOwnerById(isEditMode ? id! : undefined);
@@ -51,9 +53,24 @@ const AdminBarOwnerForm = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields for new bar owner
+    if (!isEditMode) {
+      if (!formData.name.trim()) {
+        toast.error("Name is required");
+        return;
+      }
+      if (!formData.email.trim()) {
+        toast.error("Email is required");
+        return;
+      }
+      if (!formData.auth0Id.trim()) {
+        toast.error("Auth0 ID is required");
+        return;
+      }
+    }
+    
     try {
       if (isEditMode && updateBarOwner && barOwner) {
-
         const updateData = {
           _id: barOwner._id,
           email: barOwner.email, 
@@ -68,10 +85,8 @@ const AdminBarOwnerForm = () => {
         toast.success("Bar owner updated successfully");
       } else {
         const createData = {
-          _id: "", 
           email: formData.email,
           auth0Id: formData.auth0Id,
-          role: "bar_owner" as const,
           name: formData.name,
           addressLine1: formData.addressLine1,
           city: formData.city,
@@ -82,8 +97,8 @@ const AdminBarOwnerForm = () => {
       }
       
       navigate("/admin/bar-owners");
-    } catch (error) {
-      console.log(error)
+    } catch (error: unknown) {
+      console.error("Error during bar owner form submission:", error);
       toast.error(`Failed to ${isEditMode ? "update" : "create"} bar owner`);
     }
   };
@@ -102,7 +117,7 @@ const AdminBarOwnerForm = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Name *</Label>
                 <Input
                   id="name"
                   name="name"
@@ -115,7 +130,7 @@ const AdminBarOwnerForm = () => {
               {!isEditMode && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -127,7 +142,7 @@ const AdminBarOwnerForm = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="auth0Id">Auth0 ID</Label>
+                    <Label htmlFor="auth0Id">Auth0 ID *</Label>
                     <Input
                       id="auth0Id"
                       name="auth0Id"
@@ -196,5 +211,4 @@ const AdminBarOwnerForm = () => {
 };
 
 export default AdminBarOwnerForm;
-
 

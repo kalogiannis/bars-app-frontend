@@ -34,6 +34,15 @@ const AdminDashboardLayout = () => {
                 <Separator />
                 <div className="py-2">
                   <Link 
+                    to="/admin/users" 
+                    className="block p-2 hover:bg-slate-100 rounded-md transition-colors"
+                  >
+                    Users
+                  </Link>
+                </div>
+                <Separator />
+                <div className="py-2">
+                  <Link 
                     to="/" 
                     className="block p-2 hover:bg-slate-100 rounded-md transition-colors"
                   >
@@ -55,4 +64,3 @@ const AdminDashboardLayout = () => {
 };
 
 export default AdminDashboardLayout;
-

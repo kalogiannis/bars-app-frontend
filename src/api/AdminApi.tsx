@@ -16,6 +16,17 @@ export type BarOwner = {
   auth0Id: string;
 };
 
+export type User = {
+  _id: string;
+  email: string;
+  name: string;
+  addressLine1: string;
+  city: string;
+  country: string;
+  role: "user" | "bar_owner" | "admin";
+  auth0Id: string;
+};
+
 export type DashboardStats = {
   totals: {
     bars: number;
@@ -161,37 +172,6 @@ export const useDeleteBarOwner = () => {
   return { deleteBarOwner, isLoading, isError, isSuccess };
 };
 
-export const useCreateBarOwner = () => {
-  const queryClient = useQueryClient();
-  const { getAccessTokenSilently } = useAuth0();
-
-  const { mutateAsync: createBarOwner, isLoading, isError, isSuccess } = useMutation(
-    async (formData: BarOwner) => {
-      const accessToken = await getAccessTokenSilently();
-      const response = await fetch(`${API_BASE_URL}/api/admin/bar-owners`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create bar owner");
-      }
-      return response.json();
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("allBarOwners");
-      },
-    }
-  );
-
-  return { createBarOwner, isLoading, isError, isSuccess };
-};
-
 export const useGetBarOwnerById = (barOwnerId?: string) => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -218,6 +198,190 @@ export const useGetBarOwnerById = (barOwnerId?: string) => {
   );
 
   return { barOwner, isLoading, error };
+};
+
+
+// User-related API functions
+export const useGetAllUsers = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const getAllUsersRequest = async (): Promise<User[]> => {
+    const accessToken = await getAccessTokenSilently();
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get users");
+    }
+
+    return response.json();
+  };
+
+  const { data: users, isLoading, error, refetch } = useQuery<User[], Error>(
+    "allUsers",
+    getAllUsersRequest
+  );
+
+  return { users, isLoading, error, refetch };
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  const { getAccessTokenSilently } = useAuth0();
+
+  const { mutateAsync: deleteUser, isLoading, isError, isSuccess } = useMutation(
+    async (userId: string) => {
+      const accessToken = await getAccessTokenSilently();
+      const response = await fetch(
+        `${API_BASE_URL}/api/admin/users/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete user");
+      }
+      return response.json();
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("allUsers");
+      },
+    }
+  );
+
+  return { deleteUser, isLoading, isError, isSuccess };
+};
+
+
+export const useCreateUser = () => {
+  const queryClient = useQueryClient();
+  const { getAccessTokenSilently } = useAuth0();
+
+  const { mutateAsync: createUser, isLoading, isError, isSuccess } = useMutation(
+    async (formData: User) => {
+      const accessToken = await getAccessTokenSilently();
+      const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create user");
+      }
+      return response.json();
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("allUsers");
+      },
+    }
+  );
+
+  return { createUser, isLoading, isError, isSuccess };
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  const { getAccessTokenSilently } = useAuth0();
+
+  const { mutateAsync: updateUser, isLoading, isError, isSuccess } = useMutation(
+    async (formData: User) => {
+      const accessToken = await getAccessTokenSilently();
+      const response = await fetch(`${API_BASE_URL}/api/admin/users/${formData._id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update user");
+      }
+      return response.json();
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("allUsers");
+      },
+    }
+  );
+
+  return { updateUser, isLoading, isError, isSuccess };
+};
+
+export const useGetUserById = (userId?: string) => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const getUserByIdRequest = async (): Promise<User> => {
+    const accessToken = await getAccessTokenSilently();
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get user");
+    }
+
+    return response.json();
+  };
+
+  const { data: user, isLoading, error } = useQuery<User, Error>(
+    ["user", userId],
+    getUserByIdRequest,
+    { enabled: !!userId }
+  );
+
+  return { user, isLoading, error };
+};
+
+
+export const useCreateBarOwner = () => {
+  const queryClient = useQueryClient();
+  const { getAccessTokenSilently } = useAuth0();
+
+  const { mutateAsync: createBarOwner, isLoading, isError, isSuccess } = useMutation(
+    async (formData: any) => {
+      const accessToken = await getAccessTokenSilently();
+      const response = await fetch(`${API_BASE_URL}/api/admin/bar-owners`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create bar owner");
+      }
+      return response.json();
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("allBarOwners");
+      },
+    }
+  );
+
+  return { createBarOwner, isLoading, isError, isSuccess };
 };
 
 export const useUpdateBarOwner = () => {
