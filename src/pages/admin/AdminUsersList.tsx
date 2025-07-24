@@ -1,4 +1,3 @@
-
 import { useGetAllUsers, useDeleteUser, User } from "@/api/AdminApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,14 +18,15 @@ const AdminUsersList = () => {
   const handleSearch = (searchFormData: SearchForm) => {
     const query = searchFormData.searchQuery.toLowerCase();
     setSearchQuery(query);
-    
+
     if (users) {
-      const filtered = users.filter((user: User) =>
-        user.name?.toLowerCase().includes(query) ||
-        user.email?.toLowerCase().includes(query) ||
-        user.city?.toLowerCase().includes(query) ||
-        user.country?.toLowerCase().includes(query) ||
-        user.role?.toLowerCase().includes(query)
+      const filtered = users.filter(
+        (user: User) =>
+          user.name?.toLowerCase().includes(query) ||
+          user.email?.toLowerCase().includes(query) ||
+          user.city?.toLowerCase().includes(query) ||
+          user.country?.toLowerCase().includes(query) ||
+          user.role?.toLowerCase().includes(query)
       );
       setFilteredUsers(filtered);
     }
@@ -47,7 +47,7 @@ const AdminUsersList = () => {
         refetch();
       } catch (error) {
         toast.error("Failed to delete user");
-        console.log(error)
+        console.log(error);
       }
     }
   };
@@ -85,32 +85,50 @@ const AdminUsersList = () => {
           {displayedUsers.map((user: User) => (
             <Card key={user._id} className="overflow-hidden">
               <CardHeader className="bg-slate-50">
-                <CardTitle className="text-xl">{user.name || "Unnamed User"}</CardTitle>
+                <CardTitle className="text-xl">
+                  {user.name || "Unnamed User"}
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-4">
                 <div className="space-y-2">
-                  <p><span className="font-semibold">Email:</span> {user.email}</p>
-                  <p><span className="font-semibold">Role:</span> {user.role}</p>
+                  <p>
+                    <span className="font-semibold">Email:</span> {user.email}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Role:</span> {user.role}
+                  </p>
                   {user.addressLine1 && (
-                    <p><span className="font-semibold">Address:</span> {user.addressLine1}</p>
+                    <p>
+                      <span className="font-semibold">Address:</span>{" "}
+                      {user.addressLine1}
+                    </p>
                   )}
                   {user.city && (
-                    <p><span className="font-semibold">City:</span> {user.city}</p>
+                    <p>
+                      <span className="font-semibold">City:</span> {user.city}
+                    </p>
                   )}
                   {user.country && (
-                    <p><span className="font-semibold">Country:</span> {user.country}</p>
+                    <p>
+                      <span className="font-semibold">Country:</span>{" "}
+                      {user.country}
+                    </p>
                   )}
                 </div>
                 <Separator className="my-4" />
                 <div className="flex justify-between">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => navigate(`/admin/users/${user._id}/edit`)}
+                  <Button
+                    variant="outline"
+                    // onClick={() => navigate(`/admin/users/${user._id}/edit`)}
+                    // instead of user._id
+                    onClick={() =>
+                      navigate(`/admin/users/${user.auth0Id}/edit`)
+                    }
                   >
                     Edit
                   </Button>
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     onClick={() => handleDelete(user._id)}
                   >
                     Delete

@@ -1,210 +1,178 @@
 
-import { useCreateUser, useUpdateUser, useGetUserById, User } from "@/api/AdminApi";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/LoadingButton";
+import { useParams } from "react-router-dom";
+import { useCreateAdminUser, useUpdateAdminUser, useGetAdminUserById } from "@/api/AdminUserApi";
+import { useEffect } from "react";
+
+// Schema for creating a new user (email is required)
+const createFormSchema = z.object({
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  name: z.string().min(1, "Name is required"),
+  addressLine1: z.string().min(1, "Address Line 1 is required"),
+  city: z.string().min(1, "City is required"),
+  country: z.string().min(1, "Country is required"),
+});
+
+// Schema for updating an existing user (email is optional and disabled)
+const updateFormSchema = z.object({
+  email: z.string().email("Invalid email address").optional(), // Optional for update, but will be pre-filled
+  name: z.string().min(1, "Name is required"),
+  addressLine1: z.string().min(1, "Address Line 1 is required"),
+  city: z.string().min(1, "City is required"),
+  country: z.string().min(1, "Country is required"),
+});
+
+type CreateUserFormData = z.infer<typeof createFormSchema>;
+type UpdateUserFormData = z.infer<typeof updateFormSchema>;
 
 const AdminUserForm = () => {
-  const { id } = useParams<{ id?: string }>();
-  const navigate = useNavigate();
-  const isEditing = Boolean(id);
+  const { id: auth0Id } = useParams(); // Get auth0Id from URL for edit mode
+  const isEditMode = !!auth0Id;
 
-  const { createUser } = useCreateUser();
-  const { updateUser } = useUpdateUser();
-  const { user, isLoading } = useGetUserById(id);
+  // Fetch user data only if in edit mode and auth0Id is available
+  const { adminUser, isLoading: isFetchingUser } = useGetAdminUserById(auth0Id || "");
+  const { createAdminUser, isLoading: isCreatingUser } = useCreateAdminUser();
+  const { updateAdminUser, isLoading: isUpdatingUser } = useUpdateAdminUser();
 
-  const [formData, setFormData] = useState<Partial<User>>({
-    name: "",
-    email: "",
-    addressLine1: "",
-    city: "",
-    country: "",
-    role: "user",
-    auth0Id: "",
+  const form = useForm<CreateUserFormData | UpdateUserFormData>({
+    resolver: zodResolver(isEditMode ? updateFormSchema : createFormSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      addressLine1: "",
+      city: "",
+      country: "",
+    },
   });
 
+  // Populate form with fetched user data in edit mode
   useEffect(() => {
-    if (isEditing && user) {
-      setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        addressLine1: user.addressLine1 || "",
-        city: user.city || "",
-        country: user.country || "",
-        role: user.role || "user",
-        auth0Id: user.auth0Id || "",
+    if (isEditMode && adminUser) {
+      form.reset({
+        email: adminUser.email,
+        name: adminUser.name,
+        addressLine1: adminUser.addressLine1,
+        city: adminUser.city,
+        country: adminUser.country,
       });
     }
-  }, [isEditing, user]);
+  }, [isEditMode, adminUser, form]);
 
-  const handleInputChange = (field: keyof User, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.name || !formData.email) {
-      toast.error("Name and email are required");
-      return;
-    }
-
-    try {
-      if (isEditing) {
-        // ensure we pass the correct ID from the URL
-        await updateUser({
-          ...(formData as Omit<User, '_id'>),
-          _id: id!,
-        } as User);
-        toast.success("User updated successfully");
-      } else {
-        await createUser(formData as User);
-        toast.success("User created successfully");
-      }
-      navigate("/admin/users");
-    } catch (error: unknown) {
-      let msg = isEditing ? "Failed to update user" : "Failed to create user";
-      if (error instanceof Error && error.message) {
-        msg += `: ${error.message}`;
-      }
-      toast.error(msg);
-      console.error("Error submitting user form:", error);
+  const onSubmit = async (values: CreateUserFormData | UpdateUserFormData) => {
+    if (isEditMode && auth0Id) {
+      // For update, pass auth0Id from URL and form data
+      await updateAdminUser({ auth0Id, formData: values as UpdateUserFormData });
+    } else {
+      // For creation, pass only form data
+      await createAdminUser(values as CreateUserFormData);
     }
   };
 
-  if (isEditing && isLoading) {
-    return <div className="flex justify-center p-8">Loading user...</div>;
-  }
+  const isLoading = isCreatingUser || isUpdatingUser || isFetchingUser;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
-          {isEditing ? "Edit User" : "Create New User"}
-        </h1>
-        <Button variant="outline" onClick={() => navigate("/admin/users") }>
-          Back to Users
-        </Button>
-      </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 bg-gray-50 rounded-lg md:p-10">
+        <div>
+          <h2 className="text-2xl font-bold">{isEditMode ? "Edit User" : "Create New User"}</h2>
+          <FormDescription>
+            {isEditMode ? "Update user information" : "Create a new user account"}
+          </FormDescription>
+        </div>
 
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>
-            {isEditing ? "Edit User Details" : "User Information"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name">Name *</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                  placeholder="Enter user name"
-                  required
-                />
-              </div>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} disabled={isEditMode} className="bg-white" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-              <div>
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  placeholder="Enter email address"
-                  required
-                />
-              </div>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input {...field} className="bg-white" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-              <div>
-                <Label htmlFor="role">Role</Label>
-                <Select
-                  value={formData.role}
-                  onValueChange={(value) => handleInputChange("role", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="bar_owner">Bar Owner</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+        <div className="flex flex-col md:flex-row gap-4">
+          <FormField
+            control={form.control}
+            name="addressLine1"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Address Line 1</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Country</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-              <div>
-                <Label htmlFor="auth0Id">Auth0 ID</Label>
-                <Input
-                  id="auth0Id"
-                  type="text"
-                  value={formData.auth0Id}
-                  onChange={(e) => handleInputChange("auth0Id", e.target.value)}
-                  placeholder="Enter Auth0 ID"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <Label htmlFor="addressLine1">Address</Label>
-                <Input
-                  id="addressLine1"
-                  type="text"
-                  value={formData.addressLine1}
-                  onChange={(e) => handleInputChange("addressLine1", e.target.value)}
-                  placeholder="Enter address"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="city">City</Label>
-                <Input
-                  id="city"
-                  type="text"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange("city", e.target.value)}
-                  placeholder="Enter city"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="country">Country</Label>
-                <Input
-                  id="country"
-                  type="text"
-                  value={formData.country}
-                  onChange={(e) => handleInputChange("country", e.target.value)}
-                  placeholder="Enter country"
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/admin/users")}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">
-                {isEditing ? "Update User" : "Create User"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+        {isLoading ? (
+          <LoadingButton isLoading={isLoading} />
+        ) : (
+          <Button type="submit" className="bg-orange-500">
+            {isEditMode ? "Update User" : "Create User"}
+          </Button>
+        )}
+      </form>
+    </Form>
   );
 };
 

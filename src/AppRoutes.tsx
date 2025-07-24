@@ -1,3 +1,4 @@
+
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./layout/Layout";
 import HomePage from "./pages/HomePages";
@@ -142,8 +143,8 @@ const AppRoutes = () => {
             <Route path="bar-owners/:id/edit" element={<AdminBarOwnerForm />} />
             <Route path="bar-owners/:id/bars" element={<AdminBarOwnerBars />} />
             <Route path="users" element={<AdminUsersList />} />
-            <Route path="users/new" element={<AdminUserForm />} />
-            <Route path="users/:id/edit" element={<AdminUserForm />} />
+            <Route path="/admin/users/new" element={<AdminUserForm />} />
+            <Route path="/admin/users/:id/edit" element={<AdminUserForm />} />
           </Route>
         </Route>
 
