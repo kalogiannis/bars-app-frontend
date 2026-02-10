@@ -1,4 +1,5 @@
 
+
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "sonner";
@@ -358,7 +359,7 @@ export const useCreateBarOwner = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   const { mutateAsync: createBarOwner, isLoading, isError, isSuccess } = useMutation(
-    async (formData: any) => {
+    async (formData: { email: string; name: string; addressLine1?: string; city?: string; country?: string }) => {
       const accessToken = await getAccessTokenSilently();
       const response = await fetch(`${API_BASE_URL}/api/admin/bar-owners`, {
         method: "POST",
@@ -377,6 +378,10 @@ export const useCreateBarOwner = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("allBarOwners");
+        toast.success("Bar owner created successfully!");
+      },
+      onError: (error: Error) => {
+        toast.error(error.message);
       },
     }
   );
@@ -389,7 +394,7 @@ export const useUpdateBarOwner = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   const { mutateAsync: updateBarOwner, isLoading, isError, isSuccess } = useMutation(
-    async (formData: BarOwner) => {
+    async (formData: { _id: string; name: string; addressLine1?: string; city?: string; country?: string }) => {
       const accessToken = await getAccessTokenSilently();
       const response = await fetch(`${API_BASE_URL}/api/admin/bar-owners/${formData._id}`, {
         method: "PUT",
@@ -397,7 +402,12 @@ export const useUpdateBarOwner = () => {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          addressLine1: formData.addressLine1,
+          city: formData.city,
+          country: formData.country,
+        }),
       });
 
       if (!response.ok) {
@@ -409,10 +419,13 @@ export const useUpdateBarOwner = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("allBarOwners");
         queryClient.invalidateQueries("barOwner");
+        toast.success("Bar owner updated successfully!");
+      },
+      onError: (error: Error) => {
+        toast.error(error.message);
       },
     }
   );
 
   return { updateBarOwner, isLoading, isError, isSuccess };
 };
-

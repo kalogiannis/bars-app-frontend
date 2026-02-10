@@ -1,4 +1,5 @@
 
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingButton from "@/components/LoadingButton";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCreateAdminUser, useUpdateAdminUser, useGetAdminUserById } from "@/api/AdminUserApi";
 import { useEffect } from "react";
 
@@ -40,6 +41,7 @@ type CreateUserFormData = z.infer<typeof createFormSchema>;
 type UpdateUserFormData = z.infer<typeof updateFormSchema>;
 
 const AdminUserForm = () => {
+  const navigate = useNavigate();
   const { id: auth0Id } = useParams(); // Get auth0Id from URL for edit mode
   const isEditMode = !!auth0Id;
 
@@ -79,7 +81,9 @@ const AdminUserForm = () => {
     } else {
       // For creation, pass only form data
       await createAdminUser(values as CreateUserFormData);
+      
     }
+    navigate("/admin/users");
   };
 
   const isLoading = isCreatingUser || isUpdatingUser || isFetchingUser;

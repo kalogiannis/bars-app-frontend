@@ -1,4 +1,5 @@
 
+
 import { useGetAllBarOwners, useDeleteBarOwner, BarOwner } from "@/api/AdminApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,7 +47,7 @@ const AdminBarOwnersList = () => {
         refetch();
       } catch (error) {
         toast.error("Failed to delete bar owner");
-        console.log(error)
+        console.error(error);
       }
     }
   };
@@ -57,7 +58,7 @@ const AdminBarOwnersList = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Bar Owners Management</h1>
         <Button onClick={() => navigate("/admin/bar-owners/new")}>
           Add New Bar Owner
@@ -75,7 +76,7 @@ const AdminBarOwnersList = () => {
       </div>
 
       {displayedBarOwners && displayedBarOwners.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {displayedBarOwners.map((owner: BarOwner) => (
             <Card key={owner._id} className="overflow-hidden">
               <CardHeader className="bg-slate-50">
@@ -95,22 +96,27 @@ const AdminBarOwnersList = () => {
                   )}
                 </div>
                 <Separator className="my-4" />
-                <div className="flex justify-between">
-                  <Button 
-                    variant="outline" 
+                <div className="flex flex-col gap-2">
+                  {/* View Bars full width on its own line */}
+                  <Button
+                    variant="outline"
+                    className="w-full"
                     onClick={() => navigate(`/admin/bar-owners/${owner._id}/bars`)}
                   >
                     View Bars
                   </Button>
-                  <div className="space-x-2">
-                    <Button 
-                      variant="outline" 
+                  {/* Edit & Delete side by side sharing space */}
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
                       onClick={() => navigate(`/admin/bar-owners/${owner._id}/edit`)}
                     >
                       Edit
                     </Button>
-                    <Button 
-                      variant="destructive" 
+                    <Button
+                      variant="destructive"
+                      className="flex-1"
                       onClick={() => handleDelete(owner._id)}
                     >
                       Delete
@@ -124,8 +130,8 @@ const AdminBarOwnersList = () => {
       ) : (
         <div className="text-center p-8 bg-slate-50 rounded-lg">
           <p className="text-lg">No bar owners found</p>
-          <Button 
-            className="mt-4" 
+          <Button
+            className="mt-4"
             onClick={() => navigate("/admin/bar-owners/new")}
           >
             Add Your First Bar Owner

@@ -1,214 +1,215 @@
 
-import  { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useCreateBarOwner, useGetBarOwnerById, useUpdateBarOwner } from "@/api/AdminApi";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import LoadingButton from "@/components/LoadingButton";
+import { useParams, useNavigate } from "react-router-dom";
+import { useCreateBarOwner, useUpdateBarOwner, useGetBarOwnerById } from "@/api/AdminApi";
+import { useEffect } from "react";
+
+// Schema for creating a new bar owner (email is required)
+const createFormSchema = z.object({
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  name: z.string().min(1, "Name is required"),
+  addressLine1: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+});
+
+// Schema for updating an existing bar owner (email is optional and disabled)
+const updateFormSchema = z.object({
+  email: z.string().email("Invalid email address").optional(), // Optional for update, but will be pre-filled
+  name: z.string().min(1, "Name is required"),
+  addressLine1: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+});
+
+type CreateBarOwnerFormData = z.infer<typeof createFormSchema>;
+type UpdateBarOwnerFormData = z.infer<typeof updateFormSchema>;
 
 const AdminBarOwnerForm = () => {
-  // const { id } = useParams<{ id: string }>();
-  // const isEditMode = id !== "new";
-  const { id } = useParams<{ id?: string }>();
-  const isEditMode = Boolean(id) && id !== "new";
+  const { id } = useParams(); // Get id from URL for edit mode
   const navigate = useNavigate();
-  
-  const { barOwner, isLoading: isLoadingBarOwner } = useGetBarOwnerById(isEditMode ? id! : undefined);
-  const { createBarOwner, isLoading: isCreating } = useCreateBarOwner();
-  const { updateBarOwner, isLoading: isUpdating } = useUpdateBarOwner();
+  const isEditMode = !!id && id !== "new";
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    auth0Id: "",
-    addressLine1: "",
-    city: "",
-    country: "",
+  // Fetch bar owner data only if in edit mode and id is available
+  const { barOwner, isLoading: isFetchingBarOwner } = useGetBarOwnerById(isEditMode ? id : undefined);
+  const { createBarOwner, isLoading: isCreatingBarOwner } = useCreateBarOwner();
+  const { updateBarOwner, isLoading: isUpdatingBarOwner } = useUpdateBarOwner();
+
+  const form = useForm<CreateBarOwnerFormData | UpdateBarOwnerFormData>({
+    resolver: zodResolver(isEditMode ? updateFormSchema : createFormSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      addressLine1: "",
+      city: "",
+      country: "",
+    },
   });
 
+  // Populate form with fetched bar owner data in edit mode
   useEffect(() => {
     if (isEditMode && barOwner) {
-      setFormData({
-        name: barOwner.name || "",
-        email: barOwner.email || "",
-        auth0Id: barOwner.auth0Id || "",
+      form.reset({
+        email: barOwner.email,
+        name: barOwner.name,
         addressLine1: barOwner.addressLine1 || "",
         city: barOwner.city || "",
         country: barOwner.country || "",
       });
     }
-  }, [isEditMode, barOwner]);
+  }, [isEditMode, barOwner, form]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    
-    // Validate required fields for new bar owner
-    if (!isEditMode) {
-      if (!formData.name.trim()) {
-        toast.error("Name is required");
-        return;
-      }
-      if (!formData.email.trim()) {
-        toast.error("Email is required");
-        return;
-      }
-      if (!formData.auth0Id.trim()) {
-        toast.error("Auth0 ID is required");
-        return;
-      }
-    }
-    
+  const onSubmit = async (values: CreateBarOwnerFormData | UpdateBarOwnerFormData) => {
     try {
-      if (isEditMode && updateBarOwner && barOwner) {
-        const updateData = {
-          _id: barOwner._id,
-          email: barOwner.email, 
-          auth0Id: barOwner.auth0Id, 
-          role: barOwner.role, 
-          name: formData.name,
-          addressLine1: formData.addressLine1,
-          city: formData.city,
-          country: formData.country,
-        };
-        await updateBarOwner(updateData);
-        toast.success("Bar owner updated successfully");
+      if (isEditMode && barOwner) {
+        // For update, pass bar owner ID and form data
+        await updateBarOwner({ 
+          _id: barOwner._id, 
+          name: values.name,
+          addressLine1: values.addressLine1,
+          city: values.city,
+          country: values.country,
+        });
       } else {
-        const createData = {
-          email: formData.email,
-          auth0Id: formData.auth0Id,
-          name: formData.name,
-          addressLine1: formData.addressLine1,
-          city: formData.city,
-          country: formData.country,
-        };
-        await createBarOwner(createData);
-        toast.success("Bar owner created successfully");
+        // For creation, pass only form data (Auth0 ID will be generated automatically)
+        await createBarOwner(values as CreateBarOwnerFormData);
       }
-      
       navigate("/admin/bar-owners");
-    } catch (error: unknown) {
-      console.error("Error during bar owner form submission:", error);
-      toast.error(`Failed to ${isEditMode ? "update" : "create"} bar owner`);
+    } catch (error) {
+      console.error("Error submitting bar owner form:", error);
     }
   };
 
-  if (isEditMode && isLoadingBarOwner) {
-    return <div className="flex justify-center p-8">Loading bar owner data...</div>;
-  }
+  const isLoading = isCreatingBarOwner || isUpdatingBarOwner || isFetchingBarOwner;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>{isEditMode ? "Edit Bar Owner" : "Create New Bar Owner"}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              {!isEditMode && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="auth0Id">Auth0 ID *</Label>
-                    <Input
-                      id="auth0Id"
-                      name="auth0Id"
-                      value={formData.auth0Id}
-                      onChange={handleChange}
-                      required
-                    />
-                    <p className="text-sm text-gray-500">
-                      This should be the Auth0 user ID from the Auth0 dashboard
-                    </p>
-                  </div>
-                </>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 bg-gray-50 rounded-lg md:p-10">
+        <div>
+          <h2 className="text-2xl font-bold">{isEditMode ? "Edit Bar Owner" : "Create New Bar Owner"}</h2>
+          <FormDescription>
+            {isEditMode ? "Update bar owner information" : "Create a new bar owner account. Auth0 ID will be generated automatically."}
+          </FormDescription>
+        </div>
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} disabled={isEditMode} className="bg-white" />
+              </FormControl>
+              <FormMessage />
+              {isEditMode && (
+                <FormDescription>
+                  Email cannot be changed for existing bar owners
+                </FormDescription>
               )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="addressLine1">Address</Label>
-                <Input
-                  id="addressLine1"
-                  name="addressLine1"
-                  value={formData.addressLine1}
-                  onChange={handleChange}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="city">City</Label>
-                <Input
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="country">Country</Label>
-                <Input
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                />
-              </div>
-              
-              <div className="flex justify-end space-x-2 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate("/admin/bar-owners")}
-                >
-                  Cancel
-                </Button>
-                <LoadingButton
-                  type="submit"
-                  isLoading={isCreating || isUpdating}
-                >
-                  {isEditMode ? "Update" : "Create"}
-                </LoadingButton>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input {...field} className="bg-white" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex flex-col md:flex-row gap-4">
+          <FormField
+            control={form.control}
+            name="addressLine1"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Address Line 1</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Country</FormLabel>
+                <FormControl>
+                  <Input {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {!isEditMode && (
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> Auth0 ID will be generated automatically when the bar owner is created. 
+              The bar owner will be able to log in using their email address.
+            </p>
+          </div>
+        )}
+
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/admin/bar-owners")}
+          >
+            Cancel
+          </Button>
+          {isLoading ? (
+            <LoadingButton isLoading={isLoading} />
+          ) : (
+            <Button type="submit" className="bg-orange-500">
+              {isEditMode ? "Update Bar Owner" : "Create Bar Owner"}
+            </Button>
+          )}
+        </div>
+      </form>
+    </Form>
   );
 };
 
 export default AdminBarOwnerForm;
-
