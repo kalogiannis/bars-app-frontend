@@ -1,5 +1,3 @@
-
-
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "sonner";
@@ -428,4 +426,36 @@ export const useUpdateBarOwner = () => {
   );
 
   return { updateBarOwner, isLoading, isError, isSuccess };
+};
+
+export const useCreateBarOwnerBar = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const createBarOwnerBarRequest = async ({ barOwnerId, barFormData }: { barOwnerId: string; barFormData: FormData }) => {
+    const accessToken = await getAccessTokenSilently();
+    const response = await fetch(`${API_BASE_URL}/api/admin/bar-owners/${barOwnerId}/bars`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: barFormData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create bar");
+    }
+    return response.json();
+  };
+
+  const { mutateAsync: createBarOwnerBar, isLoading, isSuccess, error } = useMutation(createBarOwnerBarRequest);
+
+  if (isSuccess) {
+    toast.success("Bar created successfully!");
+  }
+
+  if (error) {
+    toast.error(error.toString());
+  }
+
+  return { createBarOwnerBar, isLoading };
 };

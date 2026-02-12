@@ -1,5 +1,3 @@
-
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,8 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingButton from "@/components/LoadingButton";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCreateBarOwner, useUpdateBarOwner, useGetBarOwnerById } from "@/api/AdminApi";
-import { useEffect } from "react";
+import { useCreateBarOwner, useUpdateBarOwner, useGetBarOwnerById, useCreateBarOwnerBar } from "@/api/AdminApi";
+import { useEffect, useState } from "react";
+import ManageBarForm from "@/forms/manage-bar-form/ManageBarForm";
+
 
 // Schema for creating a new bar owner (email is required)
 const createFormSchema = z.object({
@@ -44,11 +44,15 @@ const AdminBarOwnerForm = () => {
   const { id } = useParams(); // Get id from URL for edit mode
   const navigate = useNavigate();
   const isEditMode = !!id && id !== "new";
+  
+  const [step, setStep] = useState(1);
+  const [createdBarOwnerId, setCreatedBarOwnerId] = useState<string | null>(null);
 
   // Fetch bar owner data only if in edit mode and id is available
   const { barOwner, isLoading: isFetchingBarOwner } = useGetBarOwnerById(isEditMode ? id : undefined);
   const { createBarOwner, isLoading: isCreatingBarOwner } = useCreateBarOwner();
   const { updateBarOwner, isLoading: isUpdatingBarOwner } = useUpdateBarOwner();
+  const { createBarOwnerBar, isLoading: isCreatingBarBar } = useCreateBarOwnerBar();
 
   const form = useForm<CreateBarOwnerFormData | UpdateBarOwnerFormData>({
     resolver: zodResolver(isEditMode ? updateFormSchema : createFormSchema),
@@ -85,26 +89,78 @@ const AdminBarOwnerForm = () => {
           city: values.city,
           country: values.country,
         });
+        navigate("/admin/bar-owners");
       } else {
         // For creation, pass only form data (Auth0 ID will be generated automatically)
-        await createBarOwner(values as CreateBarOwnerFormData);
+        const result = await createBarOwner(values as CreateBarOwnerFormData);
+        console.log("Create Bar Owner raw result:", result);
+        
+        let barOwnerId: string | null = null;
+        if (result && typeof result === 'object') {
+          if ('barOwner' in result && result.barOwner && typeof result.barOwner === 'object' && '_id' in result.barOwner) {
+            barOwnerId = result.barOwner._id as string;
+          } else if ('_id' in result) {
+            barOwnerId = result._id as string;
+          }
+        }
+        
+        console.log("Extracted barOwnerId:", barOwnerId);
+        
+        if (barOwnerId) {
+          setCreatedBarOwnerId(barOwnerId);
+          setStep(2);
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 100);
+        } else {
+          console.error("No bar owner ID found in response", result);
+          navigate("/admin/bar-owners");
+        }
       }
-      navigate("/admin/bar-owners");
     } catch (error) {
       console.error("Error submitting bar owner form:", error);
     }
   };
 
+  const onBarSave = async (barFormData: FormData) => {
+    if (!createdBarOwnerId) return;
+    try {
+      await createBarOwnerBar({ barOwnerId: createdBarOwnerId, barFormData });
+      navigate("/admin/bar-owners");
+    } catch (error) {
+      console.error("Error creating bar:", error);
+    }
+  };
+
   const isLoading = isCreatingBarOwner || isUpdatingBarOwner || isFetchingBarOwner;
+
+  if (step === 2 && createdBarOwnerId) {
+    return (
+      <div className="space-y-4 bg-gray-50 rounded-lg md:p-10 text-black">
+        <h2 className="text-2xl font-bold">Step 2: Add Bar Details</h2>
+        <p className="text-sm text-gray-600">Now that the bar owner is created, please provide the details for their bar.</p>
+        
+        <div className="mt-6 border-t border-gray-200 pt-6">
+          <ManageBarForm onSave={onBarSave} isLoading={isCreatingBarBar} />
+        </div>
+
+        <div className="flex justify-center mt-8">
+          <Button variant="link" className="text-blue-600" onClick={() => navigate("/admin/bar-owners")}>
+            Skip for now and go back to list
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 bg-gray-50 rounded-lg md:p-10">
         <div>
-          <h2 className="text-2xl font-bold">{isEditMode ? "Edit Bar Owner" : "Create New Bar Owner"}</h2>
-          <FormDescription>
-            {isEditMode ? "Update bar owner information" : "Create a new bar owner account. Auth0 ID will be generated automatically."}
-          </FormDescription>
+          <h2 className="text-2xl font-bold">{isEditMode ? "Edit Bar Owner" : "Step 1: Create New Bar Owner"}</h2>
+          <p className="text-sm text-muted-foreground">
+            {isEditMode ? "Update bar owner information" : "Create a new bar owner account. After this step, you will add the bar details."}
+          </p>
         </div>
 
         <FormField
@@ -116,12 +172,12 @@ const AdminBarOwnerForm = () => {
               <FormControl>
                 <Input {...field} disabled={isEditMode} className="bg-white" />
               </FormControl>
-              <FormMessage />
               {isEditMode && (
                 <FormDescription>
                   Email cannot be changed for existing bar owners
                 </FormDescription>
               )}
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -203,7 +259,7 @@ const AdminBarOwnerForm = () => {
             <LoadingButton isLoading={isLoading} />
           ) : (
             <Button type="submit" className="bg-orange-500">
-              {isEditMode ? "Update Bar Owner" : "Create Bar Owner"}
+              {isEditMode ? "Update Bar Owner" : "Next: Add Bar Details"}
             </Button>
           )}
         </div>

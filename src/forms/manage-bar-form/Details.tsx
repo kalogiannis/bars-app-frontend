@@ -1,11 +1,9 @@
-
 import {
   FormField,
   FormItem,
   FormLabel,
   FormControl,
   FormMessage,
-  FormDescription, 
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -19,9 +17,9 @@ const Details = () => {
         <h2 className="text-3xl font-extrabold text-white mb-2 tracking-wide">
           Details
         </h2>
-        <FormDescription className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-lg">
           Provide information about your bar.
-        </FormDescription>
+        </p>
       </div>
 
       <FormField
@@ -160,4 +158,3 @@ const Details = () => {
 };
 
 export default Details;
-

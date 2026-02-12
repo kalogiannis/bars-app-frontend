@@ -1,7 +1,6 @@
-
-import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { FormControl,  FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
+
 import { useFormContext } from 'react-hook-form'
 
 const ImageSection = () => {
@@ -14,20 +13,20 @@ const ImageSection = () => {
         <h2 className="text-3xl font-extrabold text-white mb-2 tracking-wide">
           Image
         </h2>
-        <FormDescription className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-lg">
           Add or change the image for your bar.
-        </FormDescription>
+        </p>
       </div>
       <div className="flex flex-col gap-8 md:w-[50%]">
         {
           existingImageUrl && (
-            <AspectRatio ratio={16 / 9}>
+            <div className="aspect-video w-full">
               <img
                 src={existingImageUrl}
                 alt="Bar Image" 
                 className="rounded-md object-cover h-full w-full shadow-md border border-gray-700" 
               />
-            </AspectRatio>
+            </div>
           )
         }
         <FormField
